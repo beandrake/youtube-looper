@@ -2,6 +2,7 @@
 <!-- Language=English -->
 <html lang="en">     
 	<head>
+		<link rel="icon" href="data:,"> <!-- no favicon -->
 		<meta charset="utf-8">       
 
 		<!-- SEO -->
@@ -23,24 +24,12 @@
 			src="https://www.youtube.com/embed/yTalKpnoyrM?playlist=yTalKpnoyrM&loop=1"
 		>
 		</iframe>
-		<form id="song-ui">
-			<input type="radio" name="song-choice" id="s2" value="_t5cbJYPziA">
-  			<label for="s2">FF14 - Unleashed (Arcadion 8)</label>
-			<br>
-
-			<input type="radio" name="song-choice" id="s1" value="yTalKpnoyrM" checked="checked">
-  			<label for="s1">FF14 - The Mirror (Arcadion 10)</label>
-			<br>
-
-			<input type="radio" name="song-choice" id="s3" value="q9se5C9fX-Y">
-  			<label for="s3">Skate Story - Indian Summer</label>
-			<br>
-
-			<input type="radio" name="song-choice" id="s99" value="custom">
-  			<label for="s99">Paste any YouTube URL: <input id="user-url" type="text" name="custom-song-choice" /></label>
+		<form id="playlist">
+			<input type="radio" name="song-choice" id="playlist-custom" value="custom" checked="checked">
+  			<label for="playlist-custom">Paste any YouTube URL: <input id="user-url" type="text" name="custom-song-choice" /></label>
 			<br>
 		</form>
-		<button id="load-button">Load Song</button>
+		<button id="load-button">Load</button>
 
 		<script src="./scripts.js"></script>
 	</body>  
