@@ -58,11 +58,59 @@ window.onload = loadPlaylist;
 
 
 ///////////////////////////////////////////////////////
+//               Add a New Video
+///////////////////////////////////////////////////////
+
+const addVideo = {
+	titleElement: document.getElementById('new-title'),
+	urlElement: document.getElementById('new-url'),
+	buttonElement: document.getElementById('add-button'),
+};
+
+// this makes it so loadVideo gets called when we click the button
+addVideo.buttonElement.addEventListener(
+	'click',
+	() => {
+  		const url = addVideo.urlElement.value;
+		const regex = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
+		const results = url.match(regex);
+		const id = results[1];
+		
+		var title = addVideo.titleElement.value;
+		if (title === '') {
+			// https://oembed.com/
+			// example: https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3DM3r2XDceM6A&format=json
+			oembedURL = `https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D${id}&format=json`;
+			fetch(oembedURL)
+				.then( response => response.text() )
+				.then(
+					data => {
+						console.log(data);
+						videoData = JSON.parse(data);
+						title = videoData.title;
+						console.log(title);
+						createRadioButton(title, id);
+						addVideo.titleElement.value = '';
+						addVideo.urlElement.value = '';
+					}
+				)
+		}else{
+			createRadioButton(title, id);
+			addVideo.titleElement.value = '';
+			addVideo.urlElement.value = '';
+		}
+	}
+);
+
+
+
+
+
+///////////////////////////////////////////////////////
 //              Load a Specific Video
 ///////////////////////////////////////////////////////
 
 const frameElement = document.getElementById('youtube-frame');
-const buttonElement = document.getElementById('add-button');
 
 // replaces the YouTube video in the iframe with the user's selection
 const loadVideo = (videoID) => {
