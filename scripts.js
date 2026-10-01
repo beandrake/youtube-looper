@@ -141,3 +141,26 @@ playlistElement.addEventListener(
 	}
 );
 
+
+
+///////////////////////////////////////////////////////
+//               Hide Video Option
+///////////////////////////////////////////////////////
+
+const hideButtonElement = document.getElementById('hide-button');
+
+const toggleHiddenVideo = () => {
+	if (frameElement.height > 0) {
+		toggleHiddenVideo.previousHeight = frameElement.height;
+		frameElement.height = 0;
+	} else {
+		frameElement.height = toggleHiddenVideo.previousHeight;
+	}
+}
+
+hideButtonElement.addEventListener(
+	'click',
+	() => {
+  		toggleHiddenVideo();
+	}
+);
