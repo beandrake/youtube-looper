@@ -1,44 +1,4 @@
 
-/*
-	Thoughts about organization.
-
-	Page
-		List UI
-		AddVideo UI
-		Hide UI
-		Load UI
-		Save UI
-		Frame HTML
-		List Model
-
-	ON PAGE LOAD
-		List Model <- loads from file
-		List UI <- reapply HTML from List Model (or based on it)
-
-	List UI -CLICK->
-		Update Frame <- based on List UI
-
-	AddVideo UI -CLICK->
-		List Model <- append from AddVideo UI
-		List UI <- reapply HTML from List Model (or based on it)
-		Update AddVideo UI <- clear text
-	
-	Hide UI -CLICK->
-		Update Frame
-
-	Load UI -CLICK->
-		List Model <- loads from file
-		List UI <- reapply HTML from List Model (or based on it)
-
-	Save UI -CLICK->
-		List Model <- Used to create text file
-
-
-	List Model connects to almost everything else.
-	List Model should probably own the responsibility for updating other things.
-	
-*/
-
 const trimOuterWhiteSpace = (text) => {
 	return text.replace(/^\s+/, '').replace(/\s+$/, '');
 }
