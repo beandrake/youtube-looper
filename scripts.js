@@ -1,4 +1,48 @@
 
+/*
+	Thoughts about organization.
+
+	Page
+		List UI
+		AddVideo UI
+		Hide UI
+		Load UI
+		Save UI
+		Frame HTML
+		List Model
+
+	ON PAGE LOAD
+		List Model <- loads from file
+		List UI <- reapply HTML from List Model (or based on it)
+
+	List UI -CLICK->
+		Update Frame <- based on List UI
+
+	AddVideo UI -CLICK->
+		List Model <- append from AddVideo UI
+		List UI <- reapply HTML from List Model (or based on it)
+		Update AddVideo UI <- clear text
+	
+	Hide UI -CLICK->
+		Update Frame
+
+	Load UI -CLICK->
+		List Model <- loads from file
+		List UI <- reapply HTML from List Model (or based on it)
+
+	Save UI -CLICK->
+		List Model <- Used to create text file
+
+
+	List Model connects to almost everything else.
+	List Model should probably own the responsibility for updating other things.
+	
+*/
+
+const trimOuterWhiteSpace = (text) => {
+	return text.replace(/^\s+/, '').replace(/\s+$/, '');
+}
+
 
 const playlistElement = document.getElementById('playlist');
 
@@ -15,13 +59,14 @@ class Playlist {
 		this.videoList = [];
 	}
 
-	appendVideo(title, id, update=true) {
+	appendVideo(title, id) {
+		this._appendVideo(title, id);
+		this._updateWebpage();
+	}
+
+	_appendVideo(title, id) {
 		var video = { title: title, id: id };
 		this.videoList.push(video);
-
-		if (update) {
-			this._updateWebpage();
-		}
 	}
 
 	loadFromFile(source='./playlist.txt') {
@@ -43,7 +88,7 @@ class Playlist {
 		var title = null; 
 		for (let index = 0; index < lineList.length; index++) {
 			// strip any surrounding white space
-			let line = lineList[index].replace(/^\s+/, '').replace(/\s+$/, '');
+			let line = trimOuterWhiteSpace( lineList[index] );
 			// skip over empty lines
 			if (line === '') {
 				continue;
@@ -53,7 +98,7 @@ class Playlist {
 				title = line;
 			// otherwise, this line is the id, and we create a new entry
 			} else {
-				this.appendVideo(title, line, false);
+				this._appendVideo(title, line);
 				title = null;
 			}
 		}
@@ -109,7 +154,7 @@ addVideoUI.handleAddVideo = () => {
 	const id = results[1];
 	// TODO: handle error when invalid video URL
 	
-	var title = addVideoUI.titleElement.value;
+	var title = trimOuterWhiteSpace( addVideoUI.titleElement.value );
 	if (title === '') {
 		// Reference: https://oembed.com/
 		oembedURL = `https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D${id}&format=json`;
@@ -127,15 +172,13 @@ addVideoUI.handleAddVideo = () => {
 	}
 }
 
-// this makes it so loadVideo gets called when we click the button
+
 addVideoUI.buttonElement.addEventListener(
 	'click',
 	() => {
   		addVideoUI.handleAddVideo();
 	}
 );
-
-
 
 
 ///////////////////////////////////////////////////////
