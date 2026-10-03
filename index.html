@@ -12,12 +12,12 @@
 		>
 
 		<title>
-		ToobLoop | Auto-loop YouTube videos ad-free
+		ToobLoop | Auto-loop a YouTube video ad-free
 		</title>
 
 	</head>
 	<body>
-		
+		<p>ToobLoop - Repeats one video forever, without ads (playlist is just for convenience)</p>
 		<iframe
 			id="youtube-frame"
 			width="560" height="315"
@@ -25,7 +25,10 @@
 		>
 		</iframe>
 		<button id="hide-button">Hide Video</button>
-
+		<br/>
+		<b><p id="error-text" style="color:red; display:inline-block"></p></b>
+		<button id="error-button" style="display:none">Clear Error</button>
+		<br/>
 		<form id="playlist">
 			<!--
 			<input type="radio" name="video-option" id="playlist-custom" value="custom" checked="checked">

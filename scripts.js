@@ -3,10 +3,31 @@ const trimOuterWhiteSpace = (text) => {
 	return text.replace(/^\s+/, '').replace(/\s+$/, '');
 }
 
-const displayError = (error) => {
-	// TODO: implement UI here
-	console.log(error.message);
+const errorTextElement = document.getElementById('error-text');
+const errorButtonElement = document.getElementById('error-button');
+
+const displayError = (error, message=null) => {
+	const now = new Date();
+	const timestamp = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+	// display error text
+	const outputText = message ? message : error.message;
+	errorTextElement.innerText = timestamp + " ERROR: " + outputText;
+	console.log(error);
+	// reveal clear error button
+	errorButtonElement.style.display = "inline";
 }
+
+const clearError = () => {
+	errorTextElement.innerText = "";
+	errorButtonElement.style.display = "none";
+}
+
+errorButtonElement.addEventListener(
+	'click',
+	() => {
+  		clearError();
+	}
+);
 
 
 const playlistElement = document.getElementById('playlist');
@@ -115,7 +136,12 @@ addVideoUI.handleAddVideo = () => {
 		const results = url.match(regex);
 		id = results[1];
 	} catch (error) {
-		displayError(error);
+		customErrorMessage = null;
+		if (error instanceof TypeError) {
+			customErrorMessage = "Unfamiliar URL structure, could not extract ID.";
+		}
+
+		displayError(error, customErrorMessage);
 		return;
 	}
 		
