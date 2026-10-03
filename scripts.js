@@ -3,6 +3,11 @@ const trimOuterWhiteSpace = (text) => {
 	return text.replace(/^\s+/, '').replace(/\s+$/, '');
 }
 
+const displayError = (error) => {
+	// TODO: implement UI here
+	console.log(error.message);
+}
+
 
 const playlistElement = document.getElementById('playlist');
 
@@ -37,7 +42,7 @@ class Playlist {
 					this._loadFromData(data);
 					this._updateWebpage();
 				}
-			)
+			).catch( error => displayError(error) );
 	}
 
 	_loadFromData(data) {
@@ -67,7 +72,6 @@ class Playlist {
 		if (title) {
 			throw new Error("Loaded Playlist data was malformed!");
 		}
-		// TODO: handle error
 	}
 
 	_updateWebpage() {
@@ -101,35 +105,46 @@ var addVideoUI = {
 	buttonElement: document.getElementById('add-button'),
 };
 
-addVideoUI.addVideoAndClearFields = (title, id) => {
-	playlist.appendVideo(title, id);
-	addVideoUI.titleElement.value = '';
-	addVideoUI.urlElement.value = '';
-}
 
 addVideoUI.handleAddVideo = () => {
-	const url = addVideoUI.urlElement.value;
+	// extract YouTube video ID from URL
 	const regex = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
-	const results = url.match(regex);
-	const id = results[1];
-	// TODO: handle error when invalid video URL
-	
+	var id;
+	try {
+		const url = addVideoUI.urlElement.value;
+		const results = url.match(regex);
+		id = results[1];
+	} catch (error) {
+		displayError(error);
+		return;
+	}
+		
 	var title = trimOuterWhiteSpace( addVideoUI.titleElement.value );
-	if (title === '') {
+
+	// if user didn't provide title, fetch from API
+	// Note: either way we use promises so we can finish the same way
+	var titlePromise;
+	if (title !== '') {
+		// waits for a promise that is delivered immediately
+		titlePromise = Promise.resolve(title);
+	}else{
 		// Reference: https://oembed.com/
 		oembedURL = `https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D${id}&format=json`;
-		fetch(oembedURL)
+		titlePromise = fetch(oembedURL)
 			.then( response => response.text() )
-			.then(
-				data => {
-					videoData = JSON.parse(data);
-					title = videoData.title;
-					addVideoUI.addVideoAndClearFields(title, id);
-				}
-			)
-	}else{
-		addVideoUI.addVideoAndClearFields(title, id);
+			.then( data => JSON.parse(data).title )
+			.catch( error => displayError(error) );
 	}
+
+	// whatever happened above, when the promise resolves, add video
+	titlePromise.then( 
+		title => {
+			playlist.appendVideo(title, id);
+			// clear fields
+			addVideoUI.titleElement.value = '';
+			addVideoUI.urlElement.value = '';
+		}
+	).catch( error => displayError(error) );
 }
 
 
