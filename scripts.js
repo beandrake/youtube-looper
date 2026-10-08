@@ -3,42 +3,61 @@ const trimOuterWhiteSpace = (text) => {
 	return text.replace(/^\s+/, '').replace(/\s+$/, '');
 }
 
-const errorTextElement = document.getElementById('error-text');
-const errorButtonElement = document.getElementById('error-button');
+///////////////////////////////////////////////////////
+//               ErrorUI
+///////////////////////////////////////////////////////
 
-const displayError = (error, message=null) => {
-	const now = new Date();
-	const timestamp = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-	// display error text
-	const outputText = message ? message : error.message;
-	errorTextElement.innerText = timestamp + " ERROR: " + outputText;
-	console.log(error);
-	// reveal clear error button
-	errorButtonElement.style.display = "inline";
-}
 
-const clearError = () => {
-	errorTextElement.innerText = "";
-	errorButtonElement.style.display = "none";
-}
-
-errorButtonElement.addEventListener(
-	'click',
-	() => {
-  		clearError();
+class ErrorUI {
+	constructor(textID, buttonID) {
+		this.errorMessageElement = document.getElementById(textID);
+		this.clearErrorButton = document.getElementById(buttonID);
+		this.clearError();
+		this.startClearErrorListener();
 	}
-);
 
+	displayError = (error, customMessage=null) => {
+		// construct error text with timestamp
+		const now = new Date();
+		const timestamp = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+		const message = customMessage ? customMessage : error.message;
+		const outputText = timestamp + " ERROR: " + message;
+		// display error text
+		this.errorMessageElement.innerText = outputText;
+		// reveal clear error button
+		this.clearErrorButton.style.display = "inline";
+		// release the error into the open arms of the stack
+		throw error;
+	}
 
-const playlistElement = document.getElementById('playlist');
+	clearError = () => {
+		this.errorMessageElement.innerText = "";
+		this.clearErrorButton.style.display = "none";
+	}
+
+	startClearErrorListener() {
+		// When the listener calls our function, "this" won't be this object.
+		// So when creating the listener, we save a reference to this as self.
+		var self = this;
+		this.clearErrorButton.addEventListener(
+			'click',
+			() => {
+				self.clearError();
+			}
+		);
+	}
+}
 
 ///////////////////////////////////////////////////////
 //           Persistent Playlist Object
 ///////////////////////////////////////////////////////
 
+const playlistElement = document.getElementById('playlist');
+
 class Playlist {
-	constructor() {
+	constructor(errorUI) {
 		this.loadFromFile();
+		this.errorUI = errorUI;
 	}
 
 	clearAll() {
@@ -63,7 +82,7 @@ class Playlist {
 					this._loadFromData(data);
 					this._updateWebpage();
 				}
-			).catch( error => displayError(error) );
+			).catch( error => this.errorUI.displayError(error) );
 	}
 
 	_loadFromData(data) {
@@ -112,74 +131,115 @@ class Playlist {
 	}
 }
 
-const playlist = new Playlist();
+
 
 
 ///////////////////////////////////////////////////////
 //               Add a New Video
 ///////////////////////////////////////////////////////
 
-
-var addVideoUI = {
-	titleElement: document.getElementById('new-title'),
-	urlElement: document.getElementById('new-url'),
-	buttonElement: document.getElementById('add-button'),
-};
-
-
-addVideoUI.handleAddVideo = () => {
-	// extract YouTube video ID from URL
-	const regex = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
-	var id;
-	try {
-		const url = addVideoUI.urlElement.value;
-		const results = url.match(regex);
-		id = results[1];
-	} catch (error) {
-		customErrorMessage = null;
-		if (error instanceof TypeError) {
-			customErrorMessage = "Unfamiliar URL structure, could not extract ID.";
-		}
-
-		displayError(error, customErrorMessage);
-		return;
-	}
+class AddVideoUI {
+	
+	constructor(titleID, urlID, buttonID, playlistUI, errorUI) {
+		this.titleInput = document.getElementById(titleID);
+		this.urlInput = document.getElementById(urlID);
+		this.submitButton = document.getElementById(buttonID);
 		
-	var title = trimOuterWhiteSpace( addVideoUI.titleElement.value );
+		this.playlist = playlistUI;
+		this.errorUI = errorUI;
 
-	// if user didn't provide title, fetch from API
-	// Note: either way we use promises so we can finish the same way
-	var titlePromise;
-	if (title !== '') {
-		// waits for a promise that is delivered immediately
-		titlePromise = Promise.resolve(title);
-	}else{
-		// Reference: https://oembed.com/
-		oembedURL = `https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D${id}&format=json`;
-		titlePromise = fetch(oembedURL)
-			.then( response => response.text() )
-			.then( data => JSON.parse(data).title )
-			.catch( error => displayError(error) );
+		this.startAddVideoListener();
 	}
 
-	// whatever happened above, when the promise resolves, add video
-	titlePromise.then( 
-		title => {
-			playlist.appendVideo(title, id);
-			// clear fields
-			addVideoUI.titleElement.value = '';
-			addVideoUI.urlElement.value = '';
+	addVideo() {			
+		var id = this._idFromInput();
+		var titlePromise = this._titlePromiseFromInput(id);
+		this._queueVideoAddition(id, titlePromise);
+	}
+
+	startAddVideoListener() {
+		// When the listener calls our function, "this" won't be this object.
+		// So when creating the listener, we save a reference to this as self.
+		var self = this;
+		this.submitButton.addEventListener(
+			'click',
+			() => {
+				self.addVideo();
+			}
+		);
+	}
+	
+	_idFromInput() {
+		// extract YouTube video ID from URL using this regular expression
+		const regex = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
+		try {
+			const url = this.urlInput.value;
+			const results = url.match(regex);
+			return results[1];
+		} catch (error) {
+			var customErrorMessage = null;
+			if (error instanceof TypeError) {
+				customErrorMessage = "Unfamiliar URL structure, could not extract ID.";
+			}
+
+			this.errorUI.displayError(error, customErrorMessage);
 		}
-	).catch( error => displayError(error) );
+	}
+
+	_titlePromiseFromInput(id) {
+		// get user-entered title
+		var title = trimOuterWhiteSpace( this.titleInput.value );
+		
+		// If the user didn't provide a title, we need to get it from the API,
+		// and doing that requires an asyncronous promise.
+		// Because of that, even if the user provided a title, we'll return it
+		// as a promise, so that after that both cases get handled identically.
+		if (title !== '') {
+			// return title in a promise that resolves immediately
+			return Promise.resolve(title);
+		}else{
+			// user didn't provide title, so retrieve from API
+			// Reference: https://oembed.com/
+			const oembedURL = `https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D${id}&format=json`;
+			// return a promise that may take some time to process
+			return fetch(oembedURL)
+				.then( response => response.text() )
+				.then( data => JSON.parse(data).title )
+				.catch( error => this.errorUI.displayError(error) );
+		}
+	}
+
+	_queueVideoAddition(id, titlePromise) {
+		// when the promise finishes its other instructions, add a new video
+		titlePromise.then( 
+			title => {
+				this.playlist.appendVideo(title, id);
+				// clear fields
+				this.titleInput.value = '';
+				this.urlInput.value = '';
+			}
+		).catch( error => this.errorUI.displayError(error) );
+	}
 }
 
 
-addVideoUI.buttonElement.addEventListener(
-	'click',
-	() => {
-  		addVideoUI.handleAddVideo();
+
+
+
+class App {
+	constructor() {
+		this.errorUI = new ErrorUI('error-text', 'error-button');
+		this.playlist = new Playlist(this.errorUI);
+		this.addVideoUI = new AddVideoUI('title-input', 'url-input', 'add-video-button', this.playlist, this.errorUI);
 	}
-);
+
+
+}
+
+const app = new App();
+
+
+
 
 
 ///////////////////////////////////////////////////////
