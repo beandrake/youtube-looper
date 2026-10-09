@@ -55,9 +55,11 @@ class ErrorUI {
 const playlistElement = document.getElementById('playlist');
 
 class Playlist {
-	constructor(errorUI) {
-		this.loadFromFile();
+	constructor(playlistID, errorUI) {
+		this.playlistElement = document.getElementById(playlistID);
 		this.errorUI = errorUI;
+
+		this.videoList = []
 	}
 
 	clearAll() {
@@ -74,46 +76,6 @@ class Playlist {
 		this.videoList.push(video);
 	}
 
-	loadFromFile(source='./playlist.txt') {
-		fetch(source)
-			.then( response => response.text() )
-			.then(
-				data => {
-					this._loadFromData(data);
-					this._updateWebpage();
-				}
-			).catch( error => this.errorUI.displayError(error) );
-	}
-
-	_loadFromData(data) {
-		this.clearAll();
-
-		// parse line by line; lines will be in pairs, a title followed by an id
-		const lineList = data.split('\n');
-		var title = null; 
-		for (let index = 0; index < lineList.length; index++) {
-			// strip any surrounding white space
-			let line = trimOuterWhiteSpace( lineList[index] );
-			// skip over empty lines
-			if (line === '') {
-				continue;
-			}
-			// if we don't yet have a title, this line is the title
-			if (!title) {
-				title = line;
-			// otherwise, this line is the id, and we create a new entry
-			} else {
-				this._appendVideo(title, line);
-				title = null;
-			}
-		}
-
-		// if there was a title without a corresponding ID, the data was bad
-		if (title) {
-			throw new Error("Loaded Playlist data was malformed!");
-		}
-	}
-
 	_updateWebpage() {
 		// Generates HTML that we will insert within the playlist element
 		let html = '';
@@ -127,11 +89,77 @@ class Playlist {
 				<label for="playlist-${count}">${video.title}</label><br>`;
 			count++;
 		}
-		playlistElement.innerHTML = html;
+		this.playlistElement.innerHTML = html;
+	}
+
+	loadFromFile(source) {
+		var arrayPromise = PairDataSet.loadFromFile(source);
+		arrayPromise.catch( error => this.errorUI.displayError(error) )
+			.then( data => this.loadFromArray(data) );
+	}
+
+	loadFromArray(list) {
+		this.clearAll();
+
+		// expects an array of 2-dimensional arrays, containing title and ID
+		try {
+			for (let pair of list) {
+				this._appendVideo( pair[0], pair[1] );
+			}
+		} catch (error) {
+			var customErrorMessage = "Problem loading playlist from array.";
+			this.errorUI.displayError(error, customErrorMessage);
+		}
+		this._updateWebpage();
 	}
 }
 
+const PLAYLIST_FILE = './playlist.txt';
+const PLAYLIST_LOAD_ERROR = "Loaded Playlist data was malformed!"
 
+var PairDataSet = new function() {
+
+	// Returns a promise for an array of 2-dimensional arrays
+	this.loadFromFile = function(source) {	
+		return fetch(source)
+			.then( response => response.text() )
+			.then( data => this._loadFromData(data)	);
+	}
+
+	// Returns an array of 2-dimensional arrays
+	this._loadFromData = function(data) {
+		// parse line by line; lines will be in pairs, a title followed by an id
+		const lineList = data.split('\n');
+	
+		// Data format: lines are in pairs, white space lines are not counted
+		var pairList = [];		
+		var pair = []; 
+		for (let index = 0; index < lineList.length; index++) {
+			// strip any surrounding white space
+			let line = trimOuterWhiteSpace( lineList[index] );
+			// skip over empty lines
+			if (line === '') {
+				continue;
+			}
+			
+			pair.push(line);
+			if (pair.length == 2) {
+				pairList.push(pair);
+				pair = [];
+			}
+		}
+
+		// if the file ended with an incomplete pair, error
+		if (pair.length == 1) {
+			throw new Error("While loading pairs from data, data ended mid-pair!");
+		}
+		return pairList;
+	}
+
+	this.saveToFile = function(data, destination) {
+		// implement me
+	}
+}
 
 
 ///////////////////////////////////////////////////////
@@ -229,8 +257,11 @@ class AddVideoUI {
 class App {
 	constructor() {
 		this.errorUI = new ErrorUI('error-text', 'error-button');
-		this.playlist = new Playlist(this.errorUI);
+		this.playlist = new Playlist('playlist', this.errorUI);
+		this.playlist.loadFromFile('./playlist.txt');
 		this.addVideoUI = new AddVideoUI('title-input', 'url-input', 'add-video-button', this.playlist, this.errorUI);
+
+		//this.
 	}
 
 
