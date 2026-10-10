@@ -24,11 +24,9 @@
 			src="https://www.youtube.com/embed/yTalKpnoyrM?playlist=yTalKpnoyrM&loop=1"
 		>
 		</iframe>
-		<button id="hide-button">Hide Video</button>
 		<br/>
 		<b><p id="error-text" style="color:red; display:inline-block"></p></b>
 		<button id="error-button" style="display:none">Clear Error</button>
-		<br/>
 		<form id="playlist">
 			<!--
 			<input type="radio" name="video-option" id="playlist-custom" value="custom" checked="checked">
@@ -40,6 +38,6 @@
 		<input type="text" id="url-input" placeholder="YouTube video URL"><br/>
 		<button id="add-video-button">Add Video</button>
 
-		<script src="./scripts.js"></script>
+		<script type="module" src="./src/App.js"></script>
 	</body>  
 </html>
