@@ -14,36 +14,52 @@ class PlaylistData {
 		this.videoList = [];
 	}
 
-	// empties playlist
+	// Empties playlist
 	clearAll() {
 		this.videoList = [];
 	}
 
-	// add a video to the end of the list and update webpage
+	// Add a video to the end of the list and update webpage
 	appendVideo(title, id) {
 		this._appendVideo(title, id);
 		this._updateUi();
 	}
 
-	// add a video to the end of the list
+	// Add a video to the end of the list
 	_appendVideo(title, id) {
 		var video = { title: title, id: id };
 		this.videoList.push(video);
 	}
 
-	// gives the playlist UI the updated playlist to display
-	_updateUi() {		
-		this.playlistUi.updateWebpage(this.videoList);
+	// Provides a deep copy of the video list
+	// @onlyArrays - set to true to receive as an array of 2D arrays
+	getVideoList(onlyArrays=false) {
+		let copyOfList = [];
+		for (let video of this.videoList) {
+			let newVideo;
+			if (onlyArrays) {
+				newVideo = [video.title, video.id];
+			} else {
+				newVideo = { title: video.title, id: video.id };
+			}
+			copyOfList.push(newVideo);
+		}
+		return copyOfList;
 	}
 
-	// load a playlist from a pair data file; clears the previous playlist
+	// Gives the playlist UI the updated playlist to display
+	_updateUi() {		
+		this.playlistUi.updateWebpage( this.getVideoList() );
+	}
+
+	// Load a playlist from a pair data file; clears the previous playlist
 	loadFromFile(source) {
 		var arrayPromise = PairDataSet.loadFromFile(source);
 		arrayPromise.catch( error => this.errorUi.displayError(error) )
 			.then( data => this.loadFromArray(data) );
 	}
 
-	// load playlist from array; clears the previous playlist
+	// Load playlist from array; clears the previous playlist
 	loadFromArray(list) {
 		this.clearAll();
 
