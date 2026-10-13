@@ -53,8 +53,32 @@ var PairDataSet = new function() {
 		return pairList;
 	}
 
-	this.saveToFile = function(data, destination) {
-		// implement me
+	// given an array of 2-dimensional arrays, returns a string representation
+	this.convertToString = function(list) {
+		var myString = "";
+		for (let sublist of list) {
+			var first = sublist[0];
+			var second = sublist[1];
+			myString += first + '\n' + second + '\n\n';
+		}
+		return myString;
+	}
+	
+	// given an array of 2-dimensional arrays, save locally to a file
+	this.saveToFile = function(data, filename) {
+		var stringData = this.convertToString(data);
+		
+		// create file-like object based on string data
+		var blobData = new Blob( [stringData], { type: "text/plain" } );
+		var url = URL.createObjectURL(blobData);
+		
+		// make a hyperlink element which is not actually attached to the page
+		var tempElement = document.createElement("a");
+		tempElement.download = filename;
+		tempElement.href = url;
+
+		// click the hyperlink, which downloads a local copy of the file
+		tempElement.click();
 	}
 }
 
