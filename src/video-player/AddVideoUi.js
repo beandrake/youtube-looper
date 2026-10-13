@@ -9,14 +9,14 @@ class AddVideoUi {
 	// @param titleId - id for a text input element.
 	// @param urlId - id for a text input element.
 	// @param buttonId - the id for a button element
-	// @playlistUi - PlaylistUi to add new videos to.
+	// @playlistData - PlaylistData to add new videos to.
 	// @errorUi - ErrorUi to send errors to.
-	constructor(titleId, urlId, buttonId, playlistUi, errorUi) {
+	constructor(titleId, urlId, buttonId, playlistData, errorUi) {
 		this.titleInput = document.getElementById(titleId);
 		this.urlInput = document.getElementById(urlId);
 		this.submitButton = document.getElementById(buttonId);
 		
-		this.playlist = playlistUi;
+		this.playlistData = playlistData;
 		this.errorUi = errorUi;
 
 		this.startAddVideoListener();
@@ -88,7 +88,7 @@ class AddVideoUi {
 	_queueVideoAddition(id, titlePromise) {
 		titlePromise.then( 
 			title => {
-				this.playlist.appendVideo(title, id);
+				this.playlistData.appendVideo(title, id);
 				// clear fields
 				this.titleInput.value = '';
 				this.urlInput.value = '';
