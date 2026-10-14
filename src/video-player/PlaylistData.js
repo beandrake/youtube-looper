@@ -1,4 +1,5 @@
-import PairDataSet from './../utils/PairDataSet.js';
+import PairData from './../utils/PairData.js';
+import FileOps from './../utils/FileOps.js';
 /**
  * PlaylistData
  * Manages the data for playlist records (pairs of titles and YouTube IDs).
@@ -53,8 +54,9 @@ class PlaylistData {
 	}
 
 	// Load a playlist from a pair data file; clears the previous playlist
-	loadFromFile(source) {
-		var arrayPromise = PairDataSet.loadFromFile(source);
+	loadFromWebFile(source) {
+		var stringPromise = FileOps.loadFromWebFile(source);
+		var arrayPromise = stringPromise.then( data => PairData.arrayFromString(data) );
 		arrayPromise.catch( error => this.errorUi.displayError(error) )
 			.then( data => this.loadFromArray(data) );
 	}

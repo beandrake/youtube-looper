@@ -3,6 +3,7 @@ import AddVideoUi from './video-player/AddVideoUi.js';
 import PlaylistData from './video-player/PlaylistData.js';
 import PlaylistUi from './video-player/PlaylistUi.js';
 import SaveUi from './video-player/SaveUi.js';
+//import LoadUi from './video-player/LoadUi.js';
 
 class App {
 	constructor() {		
@@ -12,6 +13,7 @@ class App {
 		const ADD_VIDEO_URL_ID = 'url-input';
 		const ADD_VIDEO_BUTTON_ID = 'add-video-button';
 		const SAVE_BUTTON = 'save-button';
+		const LOAD_BUTTON = 'load-button';
 		const ERROR_TEXT_ID = 'error-text';
 		const ERROR_BUTTON_ID = 'error-button';
 
@@ -25,25 +27,11 @@ class App {
 			this.playlistData, this.errorUi
 		);
 		this.saveUi = new SaveUi(SAVE_BUTTON, this.playlistData, this.errorUi);
+		//this.loadUi = new LoadUi(LOAD_BUTTON, this.playlistData, this.errorUi);
 
 
 		// populate playlist from default playlist file
-		this.playlistData.loadFromFile(DEFAULT_PLAYLIST_FILE);
-
-		/*
-		function performClick(elemOrSelector) {
-			const elem = elemOrSelector instanceof Element ? elemOrSelector : document.querySelector(elemOrSelector);
-			if (elem && document.createEvent) {
-				const evt = document.createEvent("MouseEvents");
-				evt.initEvent("click", true, false);
-				elem.dispatchEvent(evt);
-			}
-		}
-
-		document.querySelector('a').addEventListener('click', ev => {
-			performClick('#theFile');
-		});
-		*/
+		this.playlistData.loadFromWebFile(DEFAULT_PLAYLIST_FILE);
 	}
 }
 

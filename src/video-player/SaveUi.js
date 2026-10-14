@@ -1,4 +1,7 @@
-import PairDataSet from './../utils/PairDataSet.js';
+import PairData from './../utils/PairData.js';
+import FileOps from './../utils/FileOps.js';
+
+const DEFAULT_PLAYLIST_FILENAME = "playlist.txt";
 /**
  * SaveUi
  * The interface to save playlist data to a local file.
@@ -21,7 +24,9 @@ class SaveUi {
 	savePlaylistLocally() {			
 		try {
 			var videoList = this.playlistData.getVideoList(true);
-			PairDataSet.saveToFile(videoList, "playlist.txt");
+			var stringData = PairData.stringFromArray(videoList);
+			FileOps.saveToFile(stringData, DEFAULT_PLAYLIST_FILENAME);
+			
 		} catch (error) {
 			var customErrorMessage = "Problem saving playlist locally.";
 			this.errorUi.displayError(error, customErrorMessage);
