@@ -9,8 +9,8 @@ class AddVideoUi {
 	// @param titleId - id for a text input element.
 	// @param urlId - id for a text input element.
 	// @param buttonId - the id for a button element
-	// @playlistData - PlaylistData to add new videos to.
-	// @errorUi - ErrorUi to send errors to.
+	// @param playlistData - PlaylistData to add new videos to.
+	// @param errorUi - ErrorUi to send errors to.
 	constructor(titleId, urlId, buttonId, playlistData, errorUi) {
 		this.titleInput = document.getElementById(titleId);
 		this.urlInput = document.getElementById(urlId);
