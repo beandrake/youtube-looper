@@ -28,7 +28,7 @@ class SaveUi {
 		}
 	}
 
-	// Setup submission button to trigger video additions.
+	// Setup button.
 	startSaveListener() {
 		// When the listener calls our function, "this" won't be this object.
 		// So when creating the listener, we save a reference to this as self.

@@ -3,6 +3,9 @@
  * Manages the Playlist UI.
  */
 class PlaylistUi {
+	// @param videoFrameId - id of iframe element containing videos
+	// @param playlistId - id of element which will contain playlist entries
+	// @param errorUi - ErrorUi to send errors to	
 	constructor(videoFrameId, playlistId, errorUi) {
 		this.videoFrame = document.getElementById(videoFrameId);
 		this.playlistElement = document.getElementById(playlistId);
@@ -12,7 +15,7 @@ class PlaylistUi {
 		this.startLoadVideoListener();
 	}
 
-	// replaces the YouTube video in the iframe with the user's selection
+	// Replaces the YouTube video in the iframe with the user's selection
 	loadVideo(videoId) {
 		// create new looping embedded URL for iframe and apply it to the iframe
 		const newSource = `https://www.youtube.com/embed/${videoId}?playlist=${videoId}&loop=1`;
@@ -20,7 +23,7 @@ class PlaylistUi {
 	}
 
 
-	// this makes it so loadVideo gets called when we click any radio button
+	// This makes it so loadVideo gets called when we click any radio button
 	startLoadVideoListener() {
 		var self = this;
 		this.playlistElement.addEventListener(
@@ -34,7 +37,7 @@ class PlaylistUi {
 		);
 	}
 
-	// updates playlistElement's innerHTML to represent the provided playlist
+	// Updates playlistElement's innerHTML to represent the provided playlist
 	updateWebpage(videoList) {
 		// Generates HTML that we will insert within the playlist element
 		let html = '';

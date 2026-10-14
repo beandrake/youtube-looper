@@ -4,9 +4,9 @@ import PairDataSet from './../utils/PairDataSet.js';
  * Manages the data for playlist records (pairs of titles and YouTube IDs).
  */
 class PlaylistData {
-	// @playlistId - id of element to insert playlist in via innerHTML
-	// @playlistUi - PlaylistUi to send updates to
-	// @errorUi - ErrorUi to send errors to
+	// @param playlistId - id of element to insert playlist in via innerHTML
+	// @param playlistUi - PlaylistUi to send updates to
+	// @param errorUi - ErrorUi to send errors to
 	constructor(playlistId, playlistUi, errorUi) {
 		this.playlistUi = playlistUi;
 		this.errorUi = errorUi;
@@ -32,7 +32,7 @@ class PlaylistData {
 	}
 
 	// Provides a deep copy of the video list
-	// @onlyArrays - set to true to receive as an array of 2D arrays
+	// @param onlyArrays - set to true to receive as an array of 2D arrays
 	getVideoList(onlyArrays=false) {
 		let copyOfList = [];
 		for (let video of this.videoList) {
