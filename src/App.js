@@ -3,7 +3,7 @@ import AddVideoUi from './video-player/AddVideoUi.js';
 import PlaylistData from './video-player/PlaylistData.js';
 import PlaylistUi from './video-player/PlaylistUi.js';
 import SaveUi from './video-player/SaveUi.js';
-//import LoadUi from './video-player/LoadUi.js';
+import LoadUi from './video-player/LoadUi.js';
 
 class App {
 	constructor() {		
@@ -27,7 +27,7 @@ class App {
 			this.playlistData, this.errorUi
 		);
 		this.saveUi = new SaveUi(SAVE_BUTTON, this.playlistData, this.errorUi);
-		//this.loadUi = new LoadUi(LOAD_BUTTON, this.playlistData, this.errorUi);
+		this.loadUi = new LoadUi(LOAD_BUTTON, this.playlistData, this.errorUi);
 
 
 		// populate playlist from default playlist file
