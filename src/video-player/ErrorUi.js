@@ -22,6 +22,7 @@ class ErrorUi {
 		const outputText = timestamp + " ERROR: " + message;
 		// display error text
 		this.errorMessageElement.innerText = outputText;
+		this.errorMessageElement.style.display = "inline-block";
 		// reveal clear error button
 		this.clearErrorButton.style.display = "inline";
 		// release the error into the open arms of the stack
@@ -31,6 +32,7 @@ class ErrorUi {
 	// Clear the error text and hide the button
 	clearError = () => {
 		this.errorMessageElement.innerText = "";
+		this.errorMessageElement.style.display = "none";
 		this.clearErrorButton.style.display = "none";
 	}
 
