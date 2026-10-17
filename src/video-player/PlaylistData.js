@@ -18,6 +18,7 @@ class PlaylistData {
 	// Empties playlist
 	clearAll() {
 		this.videoList = [];
+		this._updateUi();
 	}
 
 	// Add a video to the end of the list and update webpage

@@ -4,6 +4,7 @@ import PlaylistData from './video-player/PlaylistData.js';
 import PlaylistUi from './video-player/PlaylistUi.js';
 import SaveUi from './video-player/SaveUi.js';
 import LoadUi from './video-player/LoadUi.js';
+import ClearUi from './video-player/ClearUi.js';
 
 class App {
 	constructor() {		
@@ -14,6 +15,7 @@ class App {
 		const ADD_VIDEO_BUTTON_ID = 'add-video-button';
 		const SAVE_BUTTON = 'save-button';
 		const LOAD_BUTTON = 'load-button';
+		const CLEAR_BUTTON = 'clear-button';
 		const ERROR_TEXT_ID = 'error-text';
 		const ERROR_BUTTON_ID = 'error-button';
 
@@ -28,6 +30,7 @@ class App {
 		);
 		this.saveUi = new SaveUi(SAVE_BUTTON, this.playlistData, this.errorUi);
 		this.loadUi = new LoadUi(LOAD_BUTTON, this.playlistData, this.errorUi);
+		this.clearAllUi = new ClearUi(CLEAR_BUTTON, this.playlistData, this.errorUi);
 
 
 		// populate playlist from default playlist file
