@@ -19,7 +19,7 @@ class AddVideoUi {
 		this.playlistData = playlistData;
 		this.errorUi = errorUi;
 
-		this.startAddVideoListener();
+		this.startListener();
 	}
 
 	// Adds a new video to the playlist based on text inputs.
@@ -30,14 +30,28 @@ class AddVideoUi {
 		this.clearInputs();
 	}
 
-	// Setup submission button to trigger video additions.
-	startAddVideoListener() {
+	// Create listener to react to form submissions (enter or button click)
+	startListener() {
 		// When the listener calls our function, "this" won't be this object.
 		// So when creating the listener, we save a reference to this as self.
 		var self = this;
 		this.submitButton.addEventListener(
 			'click',
-			() => {
+			(event) => {
+				// No matter what, if you click the submit button, this will
+				// trigger. But if your inputs and button are in the same form
+				// element, then pressing enter while an input is selected will
+				// also cause this to trigger.
+				
+				// prevent default form behavior of reloading the page
+				event.preventDefault();
+
+				// If cursor in title input, progress cursor and don't submit.
+				if (document.activeElement == self.titleInput) {
+					self.urlInput.focus();
+					return;	
+				}
+
 				self.addVideo();
 			}
 		);

@@ -28,45 +28,47 @@
 			src="https://www.youtube.com/embed/yTalKpnoyrM?playlist=yTalKpnoyrM&loop=1"
 		>
 		</iframe>
-		<br/>
 		
+		<br/>
 		<!-- Error Display -->
 		<button id="error-button">
 			Clear Error
 		</button>
 		<b><p id="error-text" style="color:red;"></p></b>
-		<br/>
 		
+		<br/>
 		<!-- Playlist-->
 		<form id="playlist">
 			<!-- video options will be populated here -->
 		</form>
+		
 		<p></p>
-		
-		<!-- Add Video to Playlist button -->
-		<input type="text" id="title-input" placeholder="Title (optional)"><br/>
-		<input type="text" id="url-input" placeholder="YouTube video URL"><br/>
-		<button id="add-video-button">
-			Add Video
-		</button>
-		<br/><br/>		
-		
+		<!-- Add Video to Playlist -->
+		<form id="add-video-form">
+			<input type="text" id="title-input" placeholder="Title (optional)"><br/>
+			<input type="text" id="url-input" placeholder="YouTube video URL"><br/>
+			<button id="add-video-button">
+				Add Video
+			</button>
+		</form>
+
+		<br/><br/>
+		All Videos:<br/>
 		<!-- Load Playlist button -->
 		<button id="load-button">
-			Load Playlist
+			Load
 		</button>
 
 		<!-- Save Playlist button -->
 		<button id="save-button">
-            Save Playlist
+            Save
         </button>
 
 		<br/>
 		<!-- Clear Playlist button -->
 		<button id="clear-button">
-			Clear Playlist
+			Clear
 		</button>
-
 
 		<script type="module" src="./src/App.js"></script>
 	</body>  
