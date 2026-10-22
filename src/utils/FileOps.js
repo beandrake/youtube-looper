@@ -1,6 +1,7 @@
 import trimOuterWhiteSpace from './textUtilities.js';
 /**
  * FileOps
+ * Contains functions related to loading and saving files.
  */
 var FileOps = new function() {
 
