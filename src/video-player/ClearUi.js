@@ -1,5 +1,5 @@
 /**
- * ClearAllUi
+ * ClearUi
  * Clears all songs from the playlist.
  */
 class ClearUi {
