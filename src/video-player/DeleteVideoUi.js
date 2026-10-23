@@ -9,8 +9,6 @@ class DeleteVideoUi {
 	// @param errorUi - ErrorUi to send errors to.
 	constructor(buttonId, playlistData, playlistUi, errorUi) {
 		this.deleteButton = document.getElementById(buttonId);
-		this.readyToDelete = false;
-		this.defaultButtonBackground = this.deleteButton.style.background;
 		
 		this.playlistData = playlistData;
 		this.playlistUi = playlistUi;
