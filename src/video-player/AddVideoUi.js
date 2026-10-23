@@ -1,3 +1,4 @@
+import YouTubeOps from './../utils/YouTubeOps.js';
 import trimOuterWhiteSpace from './../utils/textUtilities.js';
 /**
  * AddVideoUi
@@ -62,21 +63,21 @@ class AddVideoUi {
 		this.titleInput.value = '';
 		this.urlInput.value = '';
 	}
-	
+
 	// Extract the video id from the input's YouTube URL
-	_idFromInput() {
+	_idFromInput() {		
 		// regular expression, isolates ID from all known YouTube URL types
-		const regex = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
 		try {
 			const url = this.urlInput.value;
-			const results = url.match(regex);
-			return results[1];
-		} catch (error) {
-			var customErrorMessage = null;
-			if (error instanceof TypeError) {
-				customErrorMessage = "Could not extract ID, please provide a YouTube video URL.";
+			// if input is the length of an ID, treat it as an ID
+			if (url.length == YouTubeOps.VIDEO_ID_LENGTH) {
+				return url;
+			} else {
+				return YouTubeOps.extractIdFromUrl(url);				
 			}
-			this.errorUi.displayError(error, customErrorMessage);
+		} catch (error) {
+			var message = "Could not extract ID, please provide a YouTube video URL.";			
+			this.errorUi.displayError(error, message);
 		}
 	}
 
@@ -88,13 +89,9 @@ class AddVideoUi {
 			return title;
 		}
 
-		// If the user didn't provide a title, we need to get it from the API.
-		// Reference: https://oembed.com/
-		const oembedURL = `https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D${id}&format=json`;
+		// If the user didn't provide a title, we need to get it from the API.		
 		try {
-			title = await fetch(oembedURL)
-				.then( response => response.text() )
-				.then( data => JSON.parse(data).title );
+			title = await YouTubeOps.getVideoTitle(id);
 		} catch (error) {
 			var errorMessage = null;
 			if (error instanceof SyntaxError) {

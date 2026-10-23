@@ -1,3 +1,4 @@
+import YouTubeOps from './../utils/YouTubeOps.js';
 /**
  * PlaylistUi
  * Manages the Playlist UI.
@@ -18,7 +19,7 @@ class PlaylistUi {
 	// Replaces the YouTube video in the iframe with the user's selection
 	loadVideo(videoId) {
 		// create new looping embedded URL for iframe and apply it to the iframe
-		const newSource = `https://www.youtube.com/embed/${videoId}?playlist=${videoId}&loop=1`;
+		const newSource = YouTubeOps.generateLoopingUrl(videoId);
 		this.videoFrame.src = newSource;
 	}
 
@@ -29,13 +30,11 @@ class PlaylistUi {
 		this.playlistElement.addEventListener(
 			'change',
 			(event) => {
-				const matchListedVideo = `input[name="${self.name}"]`;
-				if ( event.target.matches(matchListedVideo) ) {
-					self.loadVideo(event.target.value);
-				}
+				self.loadVideo(event.target.value);
 			}
 		);
 	}
+
 
 	// Updates playlistElement's innerHTML to represent the provided playlist
 	updateWebpage(videoList) {
