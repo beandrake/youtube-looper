@@ -1,6 +1,6 @@
 /**
  * DeleteVideoUi
- * The interface that...
+ * The interface that deletes videos from the playlist.
  */
 class DeleteVideoUi {
 	// @param buttonId - the id for a button element
@@ -20,12 +20,11 @@ class DeleteVideoUi {
 	}
 
 
-
 	deleteVideo() {
 		// get selected video from Playlist UI.
 		let id = this.playlistUi.getSelectedVideoId();
 
-		// error, no video selected
+		// if no video selected, error
 		if (id == null) {
 			let error = new Error("Can't delete a video unless a video is selected.");
 			this.errorUi.displayError(error);
@@ -39,7 +38,7 @@ class DeleteVideoUi {
 		}
 	}
 
-	// Setup button to toggle delete mode.
+	// Setup button listener.
 	startListener() {
 		// When the listener calls our function, "this" won't be this object.
 		// So when creating the listener, we save a reference to this as self.
