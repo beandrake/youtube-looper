@@ -35,6 +35,12 @@ class PlaylistUi {
 		);
 	}
 
+	// Returns the id of the video that is currently selected, or null if none
+	getSelectedVideoId() {
+		let element = document.querySelector(`input[name=${this.name}]:checked`);
+
+		return element == null ? null : element.value;
+	}
 
 	// Updates playlistElement's innerHTML to represent the provided playlist
 	updateWebpage(videoList) {

@@ -1,5 +1,6 @@
 import ErrorUi from './video-player/ErrorUi.js';
 import AddVideoUi from './video-player/AddVideoUi.js';
+import DeleteVideoUi from './video-player/DeleteVideoUi.js';
 import PlaylistData from './video-player/PlaylistData.js';
 import PlaylistUi from './video-player/PlaylistUi.js';
 import SaveUi from './video-player/SaveUi.js';
@@ -15,6 +16,7 @@ class App {
 		const ADD_VIDEO_BUTTON_ID = 'add-video-button';
 		const SAVE_BUTTON = 'save-button';
 		const LOAD_BUTTON = 'load-button';
+		const DELETE_BUTTON = 'delete-button';
 		const CLEAR_BUTTON = 'clear-button';
 		const ERROR_TEXT_ID = 'error-text';
 		const ERROR_BUTTON_ID = 'error-button';
@@ -27,6 +29,10 @@ class App {
 		this.addVideoUi = new AddVideoUi(
 			ADD_VIDEO_TITLE_ID, ADD_VIDEO_URL_ID, ADD_VIDEO_BUTTON_ID,
 			this.playlistData, this.errorUi
+		);
+		this.deleteVideoUi = new DeleteVideoUi(
+			DELETE_BUTTON,
+			this.playlistData, this.playlistUi, this.errorUi
 		);
 		this.saveUi = new SaveUi(SAVE_BUTTON, this.playlistData, this.errorUi);
 		this.loadUi = new LoadUi(LOAD_BUTTON, this.playlistData, this.errorUi);
