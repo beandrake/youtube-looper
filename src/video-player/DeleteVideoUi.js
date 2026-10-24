@@ -32,7 +32,7 @@ class DeleteVideoUi {
 		try {
 			this.playlistData.removeVideo(index);
 		} catch (error) {
-			let message = new Error(`No video with index ${index} found in PlaylistData.`);
+			let message = `No video with index ${index} found in PlaylistData.`;
 			this.errorUi.displayError(error, messsage);
 		}
 	}
