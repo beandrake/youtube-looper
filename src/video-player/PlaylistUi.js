@@ -51,18 +51,22 @@ class PlaylistUi {
 	}
 
 	// Updates playlistElement's innerHTML to represent the provided playlist
-	updateWebpage(videoList) {
+	// param @videoList - a list of objects with id and title members
+	// param @checkedIndex (optional) - index of video to set as checked/selected
+	updateWebpage(videoList, checkedIndex = null) {
 		// Generates HTML that we will insert within the playlist element
 		let html = '';
-		let count = 0
+		let index = 0
 		for (let video of videoList) {
+			const checked = index == checkedIndex ? `checked="X"` : '';			
 			html += `
 				<input
 					type="radio" name="${this.name}"
-					id="playlist-${count}" value="${video.id}"
+					id="playlist-${index}" value="${video.id}"
+					${checked}
 				>
-				<label for="playlist-${count}">${video.title}</label><br>`;
-			count++;
+				<label for="playlist-${index}">${video.title}</label><br>`;
+			index++;
 		}
 		this.playlistElement.innerHTML = html;
 	}

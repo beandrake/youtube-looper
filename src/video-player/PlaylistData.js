@@ -21,27 +21,80 @@ class PlaylistData {
 		this._updateUi();
 	}
 
-	// Add a video to the end of the list and update webpage
+	// Add a video to the end of the list and update webpage.
 	appendVideo(title, id) {
 		this._appendVideo(title, id);
-		this._updateUi();
+		let selectedIndex = this.playlistUi.getSelectedVideoIndex();
+		this._updateUi(selectedIndex);
 	}
 
-	// Add a video to the end of the list
+	// Add a video to the end of the list.
 	_appendVideo(title, id) {
 		var video = { title: title, id: id };
 		this.videoList.push(video);
 	}
 
 	// Remove a video from the list and update webpage.
-	// Returns index of removed item, or -1 if not found.
 	removeVideo(index) {
-		this._validateIndex(index);
-
-		this.videoList.splice(index, 1);
+		this._removeVideo(index);
 		this._updateUi();
 	}
 
+	// Remove a video from the list.
+	_removeVideo(index) {
+		this._validateIndex(index);
+		this.videoList.splice(index, 1);
+	}
+
+	// Shift video 1 index earlier.
+	// @param index - index of video to move
+	// @param underflow - if given index 0, false will not move the video,
+	//                    while true will move it to the end.
+	shiftVideoEarlier(index, underflow=true) {
+		this._validateIndex(index);
+
+		if (index > 0) {
+			// swap video with the one before it
+			let targetVideo = this.videoList[index];
+			this.videoList[index] = this.videoList[index-1];
+			this.videoList[index-1] = targetVideo;
+			// update UI and keep this element selected
+			this._updateUi(index-1);
+		} else if (underflow) {
+			// put at the end of the list
+			let targetVideo = this.videoList[index];
+			this._removeVideo(index);
+			this._appendVideo(targetVideo.title, targetVideo.id);
+			// update UI and keep this element selected
+			this._updateUi(this.videoList.length-1);
+		}
+	}
+
+	// Shift video 1 index later.
+	// @param index - index of video to move
+	// @param overflow - if given max index, false will not move the video,
+	//                   while true will move it to the beginning.
+	shiftVideoLater(index, overflow=true) {
+		this._validateIndex(index);
+
+		if (index < this.videoList.length-1) {
+			// swap video with the one after it
+			let targetVideo = this.videoList[index];
+			this.videoList[index] = this.videoList[index+1];
+			this.videoList[index+1] = targetVideo;
+			// update UI and keep this element selected
+			this._updateUi(index+1);
+		} else if (overflow) {
+			// put at the start of the list
+			let targetVideo = this.videoList[index];
+			this._removeVideo(index);
+			this.videoList.unshift(targetVideo);
+			// update UI and keep this element selected
+			this._updateUi(0);
+		}
+	}
+
+	// throws an error if index is out of range
 	_validateIndex(index) {
 		if (index < 0 || index >= this.videoList.length) {
 			throw new RangeError("Invalid index.");
@@ -65,8 +118,9 @@ class PlaylistData {
 	}
 
 	// Gives the playlist UI the updated playlist to display
-	_updateUi() {		
-		this.playlistUi.updateWebpage( this.getVideoList() );
+	// @param selectedIndex (optional) - index of video to set as selected
+	_updateUi(selectedIndex = null) {		
+		this.playlistUi.updateWebpage( this.getVideoList(), selectedIndex );
 	}
 
 	// Load a playlist from a pair data file; clears the previous playlist
