@@ -35,18 +35,17 @@ class PlaylistData {
 
 	// Remove a video from the list and update webpage.
 	// Returns index of removed item, or -1 if not found.
-	removeVideo(id) {
-		let index = 0;
-		while (index < this.videoList.length) {
-			let video = this.videoList[index];
-			if (video.id == id) {
-				this.videoList.splice(index, 1);
-				this._updateUi();
-				return index;
-			}
-			index++;
+	removeVideo(index) {
+		this._validateIndex(index);
+
+		this.videoList.splice(index, 1);
+		this._updateUi();
+	}
+
+	_validateIndex(index) {
+		if (index < 0 || index >= this.videoList.length) {
+			throw new RangeError("Invalid index.");
 		}
-		return -1;
 	}
 
 	// Provides a deep copy of the video list

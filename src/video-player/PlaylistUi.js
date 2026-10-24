@@ -36,10 +36,18 @@ class PlaylistUi {
 	}
 
 	// Returns the id of the video that is currently selected, or null if none
-	getSelectedVideoId() {
-		let element = document.querySelector(`input[name=${this.name}]:checked`);
+	getSelectedVideoIndex() {
+		// get element radio button that is currently checked
+		const element = document.querySelector(`input[name=${this.name}]:checked`);
 
-		return element == null ? null : element.value;
+		if (element == null) {
+			return null;
+		}
+		
+		// element's id (not the video id) contains its index in the list
+		//	Example id: playlist-3
+		const [, index] = element.id.split("-");
+		return Number(index);
 	}
 
 	// Updates playlistElement's innerHTML to represent the provided playlist

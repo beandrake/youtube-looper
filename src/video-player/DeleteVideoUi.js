@@ -17,22 +17,23 @@ class DeleteVideoUi {
 		this.startListener();
 	}
 
-
+	// delete the selected entry in the video list
 	deleteVideo() {
 		// get selected video from Playlist UI.
-		let id = this.playlistUi.getSelectedVideoId();
+		let index = this.playlistUi.getSelectedVideoIndex();
 
 		// if no video selected, error
-		if (id == null) {
+		if (index == null) {
 			let error = new Error("Can't delete a video unless a video is selected.");
 			this.errorUi.displayError(error);
 		}
 
 		// delete video from Playlist data.
-		let index = this.playlistData.removeVideo(id);
-		if (index < 0) {
-			let error = new Error(`No video with id ${id} found in PlaylistData.`);
-			this.errorUi.displayError(error);
+		try {
+			this.playlistData.removeVideo(index);
+		} catch (error) {
+			let message = new Error(`No video with index ${index} found in PlaylistData.`);
+			this.errorUi.displayError(error, messsage);
 		}
 	}
 
