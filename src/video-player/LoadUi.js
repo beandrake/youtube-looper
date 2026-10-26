@@ -29,6 +29,7 @@ class LoadUi {
 			var list = PairData.arrayFromString(stringData);
 		} catch (error) {
 			this.errorUi.displayError(error);
+			return;
 		}
 		this.playlistData.loadFromArray(list);
 	}

@@ -7,11 +7,8 @@ import FileOps from './../utils/FileOps.js';
 class PlaylistData {
 	// @param playlistId - id of element to insert playlist in via innerHTML
 	// @param playlistUi - PlaylistUi to send updates to
-	// @param errorUi - ErrorUi to send errors to
-	constructor(playlistId, playlistUi, errorUi) {
+	constructor(playlistId, playlistUi) {
 		this.playlistUi = playlistUi;
-		this.errorUi = errorUi;
-
 		this.videoList = [];
 	}
 
@@ -124,25 +121,28 @@ class PlaylistData {
 	}
 
 	// Load a playlist from a pair data file; clears the previous playlist
-	loadFromWebFile(source) {
-		var stringPromise = FileOps.loadFromWebFile(source);
-		var arrayPromise = stringPromise.then( data => PairData.arrayFromString(data) );
-		arrayPromise.catch( error => this.errorUi.displayError(error) )
-			.then( data => this.loadFromArray(data) );
+	// @param source - file on the web containing playlist data
+	async loadFromWebFile(source) {
+		var stringData = await FileOps.loadFromWebFile(source);
+		var dataList = PairData.arrayFromString(stringData);
+		this.loadFromArray(dataList);
+
+		return true;
 	}
 
 	// Load playlist from array; clears the previous playlist
+	// @param list - an array of 2-dimensional arrays containing titles and IDs
 	loadFromArray(list) {
-		this.clearAll();
+		var backupList = this.videoList;
+		this.videoList = [];
 
-		// expects an array of 2-dimensional arrays, containing title and ID
 		try {
 			for (let pair of list) {
 				this._appendVideo( pair[0], pair[1] );
 			}
 		} catch (error) {
-			var customErrorMessage = "Problem loading playlist from array.";
-			this.errorUi.displayError(error, customErrorMessage);
+			this.videoList = backupList;
+			throw error;
 		}
 		this._updateUi();
 	}

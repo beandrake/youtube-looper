@@ -24,16 +24,18 @@ class DeleteVideoUi {
 
 		// if no video selected, error
 		if (index == null) {
-			let error = new Error("Can't delete a video unless a video is selected.");
-			this.errorUi.displayError(error);
+			let message = "Can't delete a video unless a video is selected.";
+			this.errorUi.displayError(message);
+			return;
 		}
 
 		// delete video from Playlist data.
 		try {
 			this.playlistData.removeVideo(index);
 		} catch (error) {
-			let message = `No video with index ${index} found in PlaylistData.`;
-			this.errorUi.displayError(error, messsage);
+			let message = `Failed to delete video, something went wrong.`;
+			this.errorUi.displayError(messsage);
+			return;
 		}
 	}
 

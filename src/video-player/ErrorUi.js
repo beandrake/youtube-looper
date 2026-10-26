@@ -13,20 +13,19 @@ class ErrorUi {
 		this.startClearErrorListener();
 	}
 
-	// Display an error message and a button to clear the error message
-	displayError = (error, customMessage=null) => {
+	// Display an error message and a button to clear the error message.
+	// @param error - either a string message or an Error object
+	displayError = (error) => {
+		const message = error instanceof Error ? error.message : error;
 		// construct error text with timestamp
 		const now = new Date();
 		const timestamp = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-		const message = customMessage ? customMessage : error.message;
 		const outputText = timestamp + " ERROR: " + message;
 		// display error text
 		this.errorMessageElement.innerText = outputText;
 		this.errorMessageElement.style.display = "inline-block";
 		// reveal clear error button
 		this.clearErrorButton.style.display = "inline";
-		// release the error into the open arms of the stack
-		throw error;
 	}
 
 	// Clear the error text and hide the button

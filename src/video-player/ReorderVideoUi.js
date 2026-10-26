@@ -31,8 +31,9 @@ class ReorderVideoUi {
 
 		// if no video selected, error
 		if (index == null) {
-			let error = new Error("Can't relocate a video unless a video is selected.");
-			this.errorUi.displayError(error);
+			let message = "Can't relocate a video unless a video is selected.";
+			this.errorUi.displayError(message);
+			return;
 		}
 
 		// tell PlaylistData to shift video one spot in the desired direction
@@ -43,8 +44,9 @@ class ReorderVideoUi {
 				this.playlistData.shiftVideoLater(index, this.treatListAsCircular);
 			}
 		} catch (error) {
-			let message = `No video with index ${index} found in PlaylistData.`;
-			this.errorUi.displayError(error, messsage);
+			let message = `Failed to move video, something went wrong.`;
+			this.errorUi.displayError(messsage);
+			return;
 		}
 	}
 

@@ -25,11 +25,11 @@ class SaveUi {
 		try {
 			var videoList = this.playlistData.getVideoList(true);
 			var stringData = PairData.stringFromArray(videoList);
-			FileOps.saveToFile(stringData, DEFAULT_PLAYLIST_FILENAME);
-			
+			FileOps.saveToFile(stringData, DEFAULT_PLAYLIST_FILENAME);			
 		} catch (error) {
-			var customErrorMessage = "Problem saving playlist locally.";
-			this.errorUi.displayError(error, customErrorMessage);
+			var message = "Problem saving playlist locally.";
+			this.errorUi.displayError(message);
+			return;
 		}
 	}
 

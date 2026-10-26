@@ -26,7 +26,15 @@ class AddVideoUi {
 	// Adds a new video to the playlist based on text inputs.
 	async addVideo() {			
 		var id = this._idFromInput();
+		if (id == null) {
+			return;
+		}
+		
 		var title = await this._titlePromiseFromInput(id);
+		if (title == null) {
+			return;
+		}
+
 		this.playlistData.appendVideo(title, id);
 		this.clearInputs();
 	}
@@ -77,7 +85,8 @@ class AddVideoUi {
 			}
 		} catch (error) {
 			var message = "Could not extract ID, please provide a YouTube video URL.";			
-			this.errorUi.displayError(error, message);
+			this.errorUi.displayError(message);
+			return null;
 		}
 	}
 
@@ -93,11 +102,13 @@ class AddVideoUi {
 		try {
 			title = await YouTubeOps.getVideoTitle(id);
 		} catch (error) {
-			var errorMessage = null;
 			if (error instanceof SyntaxError) {
-				errorMessage = "YouTube didn't return a title for that video ID.";
+				let message = "YouTube didn't return a title for that video ID.";
+				this.errorUi.displayError(message);
+			} else {
+				this.errorUi.displayError(error);
 			}
-			this.errorUi.displayError(error, errorMessage);
+			return null;
 		}
 		return title;
 	}
