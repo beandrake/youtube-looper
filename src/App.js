@@ -8,6 +8,8 @@ import SaveUi from './video-player/SaveUi.js';
 import LoadUi from './video-player/LoadUi.js';
 import ClearUi from './video-player/ClearUi.js';
 
+const DEFAULT_PLAYLIST_FILE = './data/playlist.txt';
+
 class App {
 	constructor() {		
 		const PLAYLIST_ID = 'playlist';
@@ -26,11 +28,9 @@ class App {
 
 		const CIRCULAR_BEHAVIOR_WHEN_MOVING_ITEMS = true;
 
-		const DEFAULT_PLAYLIST_FILE = './data/playlist.txt';
-
 		this.errorUi = new ErrorUi(ERROR_TEXT_ID, ERROR_BUTTON_ID);
 		this.playlistUi = new PlaylistUi(VIDEO_FRAME_ID, PLAYLIST_ID, this.errorUi);
-		this.playlistData = new PlaylistData(PLAYLIST_ID, this.playlistUi, this.errorUi);
+		this.playlistData = new PlaylistData(PLAYLIST_ID, this.playlistUi);
 		this.addVideoUi = new AddVideoUi(
 			ADD_VIDEO_TITLE_ID, ADD_VIDEO_URL_ID, ADD_VIDEO_BUTTON_ID,
 			this.playlistData, this.errorUi
@@ -47,11 +47,17 @@ class App {
 		this.saveUi = new SaveUi(SAVE_BUTTON, this.playlistData, this.errorUi);
 		this.loadUi = new LoadUi(LOAD_BUTTON, this.playlistData, this.errorUi);
 		this.clearAllUi = new ClearUi(CLEAR_BUTTON, this.playlistData, this.errorUi);
+	}
 
-
+	async initialize() {
 		// populate playlist from default playlist file
-		this.playlistData.loadFromWebFile(DEFAULT_PLAYLIST_FILE);
+		try {
+			var result = await this.playlistData.loadFromWebFile(DEFAULT_PLAYLIST_FILE);
+		} catch (error) {
+			this.errorUi.displayError("Failed to initialize default playlist.");
+		}
 	}
 }
 
 const app = new App();
+app.initialize();

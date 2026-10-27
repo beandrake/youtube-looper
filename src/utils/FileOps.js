@@ -9,7 +9,14 @@ var FileOps = new function() {
 	// @param source - path to load data from
 	this.loadFromWebFile = function(source) {	
 		return fetch(source)
-			.then( response => response.text() );
+			.then(
+				 response => {						
+					if (!response.ok) {
+						throw new Error(`When loading file received HTTP status ${response.status}.`);
+					}
+					return response.text();
+				}
+			);
 	}
 
 	// Returns a promise for a string containing the contents of the file in
