@@ -45,7 +45,7 @@ class ReorderVideoUi {
 			}
 		} catch (error) {
 			let message = `Failed to move video, something went wrong.`;
-			this.errorUi.displayError(messsage);
+			this.errorUi.displayError(message);
 			return;
 		}
 	}

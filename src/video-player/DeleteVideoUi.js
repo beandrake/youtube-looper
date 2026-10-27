@@ -34,7 +34,7 @@ class DeleteVideoUi {
 			this.playlistData.removeVideo(index);
 		} catch (error) {
 			let message = `Failed to delete video, something went wrong.`;
-			this.errorUi.displayError(messsage);
+			this.errorUi.displayError(message);
 			return;
 		}
 	}
