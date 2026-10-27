@@ -1,0 +1,92 @@
+body {
+  font-family: "Poppins", sans-serif;
+  margin-top: 5vh;
+  color: #ffffff;
+  background-color: #242422;
+  display: flex;
+  flex-direction: column;
+}
+
+.app {
+  /* centers the contents */
+  display: table;
+  margin: 0 auto;
+}
+
+
+p {
+  color: #d8f793;
+}
+
+#error-text {
+  color:rgb(254, 59, 59);
+}
+
+.full-width {
+  margin: 10px;
+  /* A rounded box around the section */
+  border-radius: 25px;
+  border: 2px solid rgb(38, 206, 218);
+  padding: 25px;
+  display: inline-block;
+}
+
+.full-width p {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
+.flex-container {
+  display: flex;
+}
+
+.left {
+  margin: 10px;
+  /* A rounded box around the section */
+  border-radius: 25px;
+  border: 2px solid rgb(38, 206, 218);
+  padding: 25px;
+  float: left;
+  /* prevents buttons from wrapping, maintaining aesthetic */
+  white-space: nowrap;
+}
+
+.left p {
+  /* Serves as a heading for buttons */
+  margin-top: 0px;
+  margin-bottom: 5px;
+  /* prevents text wrapping, maintaining aesthetic */
+  white-space: nowrap;
+}
+
+.button-box {
+  /* Slight indentation from heading. */
+  padding-left: 5px;
+  padding-bottom: 15px;
+}
+
+button {
+  margin-top: 4px;
+  /* prevents text wrapping, which would change button shape */
+  white-space: nowrap;
+}
+
+.right {
+  float: left;
+  /* A bit of an indent for aesthetics */
+  padding-left: 15px;
+}
+
+#playlist {
+  /* prevents text wrapping, which would disrupt the radio list aesthetic */
+  white-space: nowrap;
+}
+
+#add-video-form {
+  /* A little spacing between it and the playlist */
+  padding-top: 10px;
+  /* Because there are radio buttons above,
+     indent a bit so it better aligns with
+	 the names of the videos in the list. */ 
+  padding-left: 25px;
+}
