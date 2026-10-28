@@ -23,9 +23,16 @@ class SaveUi {
 	// Adds a new video to the playlist based on text inputs.
 	savePlaylistLocally() {			
 		try {
-			var videoList = this.playlistData.getVideoList(true);
-			var stringData = PairData.stringFromArray(videoList);
-			FileOps.saveToFile(stringData, DEFAULT_PLAYLIST_FILENAME);			
+			const videoList = this.playlistData.getVideoList(true);
+			
+			// convert to array of 2D arrays
+			const arrayList = [];
+			for (let video of videoList) {
+				arrayList.push( [video.title, video.youtubeId] );
+			}
+
+			var stringData = PairData.stringFromArray(arrayList);
+			FileOps.saveToFile(stringData, DEFAULT_PLAYLIST_FILENAME);
 		} catch (error) {
 			var message = "Problem saving playlist locally.";
 			this.errorUi.displayError(message);

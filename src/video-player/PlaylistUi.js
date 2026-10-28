@@ -6,20 +6,24 @@ import YouTubeOps from './../utils/YouTubeOps.js';
 class PlaylistUi {
 	// @param videoFrameId - id of iframe element containing videos
 	// @param playlistId - id of element which will contain playlist entries
+	// @param playlistData - PlaylistData to translate into a view
 	// @param errorUi - ErrorUi to send errors to	
-	constructor(videoFrameId, playlistId, errorUi) {
+	constructor(videoFrameId, playlistId, playlistData, errorUi) {
 		this.videoFrame = document.getElementById(videoFrameId);
 		this.playlistElement = document.getElementById(playlistId);
+		this.playlistData = playlistData;
 		this.errorUi = errorUi;
 
-		this.name = "video-option";
+		this.groupName = "video-option";
+		
+		this._subscribeToData();
 		this.startLoadVideoListener();
 	}
 
 	// Replaces the YouTube video in the iframe with the user's selection
-	loadVideo(videoId) {
+	loadVideo(youtubeId) {
 		// create new looping embedded URL for iframe and apply it to the iframe
-		const newSource = YouTubeOps.generateLoopingUrl(videoId);
+		const newSource = YouTubeOps.generateLoopingUrl(youtubeId);
 		this.videoFrame.src = newSource;
 	}
 
@@ -35,41 +39,77 @@ class PlaylistUi {
 		);
 	}
 
-	// Returns the id of the video that is currently selected, or null if none
+	// Returns index of video that is currently selected, or null if none
 	getSelectedVideoIndex() {
 		// get element radio button that is currently checked
-		const element = document.querySelector(`input[name=${this.name}]:checked`);
+		const element = document.querySelector(`input[name=${this.groupName}]:checked`);
+		if (element == null) {
+			return null;
+		}
 
+		const [index, id] = this._extractDataFromElementId(element.id);
+		return index;
+	}
+
+	// Returns id of video that is currently selected, or null if none
+	getSelectedVideoId() {
+		// get element radio button that is currently checked
+		const element = document.querySelector(`input[name=${this.groupName}]:checked`);
 		if (element == null) {
 			return null;
 		}
 		
-		// element's id (not the video id) contains its index in the list
-		//	Example id: playlist-3
-		const [, index] = element.id.split("-");
-		return Number(index);
+		const [index, id] = this._extractDataFromElementId(element.id);
+		return id;
 	}
 
-	// Updates playlistElement's innerHTML to represent the provided playlist
-	// param @videoList - a list of objects with id and title members
-	// param @checkedIndex (optional) - index of video to set as checked/selected
-	updateWebpage(videoList, checkedIndex = null) {
-		// Generates HTML that we will insert within the playlist element
+	// We store information relevant to the video in the element's id,
+	// using hyphens (-) as delimiters.  Example: playlist-3-101
+	//	The first numerical value is the video's index.
+	//	The second numerical value is the video's id from PlaylistData.
+	_generateElementId(index, id) {
+		return `playlist-${index}-${id}`;
+	}
+
+	_extractDataFromElementId(elementId) {
+		const [, index, id] = elementId.split("-");
+		return [Number(index), Number(id)];
+	}
+
+
+	// Updates playlistElement's innerHTML to represent PlaylistData
+	updateWebpage() {
+		// record selection so we can select it again, if it still exists
+		const selectionId = this.getSelectedVideoId();
+		
+		const videoList = this.playlistData.getVideoList();
+		
+		// Generates HTML that we will insert within the playlist HTML element
 		let html = '';
 		let index = 0
 		for (let video of videoList) {
-			const checked = index == checkedIndex ? `checked="X"` : '';			
+			const checked = (video.id == selectionId) ? `checked="X"` : '';
+			let elementId = this._generateElementId(index, video.id);
 			html += `
 				<input
-					type="radio" name="${this.name}"
-					id="playlist-${index}" value="${video.id}"
+					type="radio" name="${this.groupName}"
+					id="${elementId}" value="${video.youtubeId}"
 					${checked}
 				>
-				<label for="playlist-${index}">${video.title}</label><br>`;
+				<label for="${elementId}">${video.title}</label><br>`;
 			index++;
 		}
 		this.playlistElement.innerHTML = html;
 	}
+
+
+	// Whenever PlaylistData is updated, have it tell us to update the webpage.
+	_subscribeToData() {
+		const self = this;
+		const callback = () => self.updateWebpage();
+		this.playlistData.addSubscriber(callback);
+	}
+
 }
 
 export default PlaylistUi;

@@ -5,36 +5,48 @@ import FileOps from './../utils/FileOps.js';
  * Manages the data for playlist records (pairs of titles and YouTube IDs).
  */
 class PlaylistData {
-	// @param playlistId - id of element to insert playlist in via innerHTML
-	// @param playlistUi - PlaylistUi to send updates to
-	constructor(playlistId, playlistUi) {
-		this.playlistUi = playlistUi;
+	constructor() {
 		this.videoList = [];
+		this.nextId = 100;
+		this.subscriberCallbacks = [];
 	}
 
-	// Empties playlist
+	// Provide a function to call when this object's data gets updated.
+	addSubscriber(callback) {
+		this.subscriberCallbacks.push(callback);
+	}
+	
+	// When adding a new item to the list, this generates a distinct id.
+	_assignNewId() {
+		return this.nextId++;
+	}
+
+	// Empties playlist and considers data updated.
 	clearAll() {
 		this.videoList = [];
-		this._updateUi();
+		this._considerMeUpdated();
 	}
 
-	// Add a video to the end of the list and update webpage.
-	appendVideo(title, id) {
-		this._appendVideo(title, id);
-		let selectedIndex = this.playlistUi.getSelectedVideoIndex();
-		this._updateUi(selectedIndex);
+	// Add a video to the end of the list and consider data updated.
+	appendVideo(title, youtubeId) {
+		this._appendVideo(title, youtubeId);
+		this._considerMeUpdated();
 	}
 
 	// Add a video to the end of the list.
-	_appendVideo(title, id) {
-		var video = { title: title, id: id };
+	_appendVideo(title, youtubeId) {
+		var video = {
+			id: this._assignNewId(),
+			title: title,
+			youtubeId: youtubeId
+		};
 		this.videoList.push(video);
 	}
 
-	// Remove a video from the list and update webpage.
+	// Remove a video from the list and consider data updated.
 	removeVideo(index) {
 		this._removeVideo(index);
-		this._updateUi();
+		this._considerMeUpdated();
 	}
 
 	// Remove a video from the list.
@@ -43,10 +55,16 @@ class PlaylistData {
 		this.videoList.splice(index, 1);
 	}
 
-	// Shift video 1 index earlier.
+	// Update a video's title and consider data updated.
+	updateTitle(index, title) {
+		this.videoList[index].title = title;
+		this._considerMeUpdated();
+	}
+
+	// Shift video 1 index earlier and consider data updated.
 	// @param index - index of video to move
-	// @param underflow - if given index 0, false will not move the video,
-	//                    while true will move it to the end.
+	// @param underflow - if video is at the start of list, false will not move
+	//                     the video, while true will move it to the end.
 	shiftVideoEarlier(index, underflow=true) {
 		this._validateIndex(index);
 
@@ -55,22 +73,19 @@ class PlaylistData {
 			let targetVideo = this.videoList[index];
 			this.videoList[index] = this.videoList[index-1];
 			this.videoList[index-1] = targetVideo;
-			// update UI and keep this element selected
-			this._updateUi(index-1);
 		} else if (underflow) {
 			// put at the end of the list
 			let targetVideo = this.videoList[index];
 			this._removeVideo(index);
-			this._appendVideo(targetVideo.title, targetVideo.id);
-			// update UI and keep this element selected
-			this._updateUi(this.videoList.length-1);
+			this.videoList.push(targetVideo);
 		}
+		this._considerMeUpdated();
 	}
 
-	// Shift video 1 index later.
+	// Shift video 1 index later and consider data updated.
 	// @param index - index of video to move
-	// @param overflow - if given max index, false will not move the video,
-	//                   while true will move it to the beginning.
+	// @param overflow - if video is at the end of list, false will not move
+	//                   the video, while true will move it to the start.
 	shiftVideoLater(index, overflow=true) {
 		this._validateIndex(index);
 
@@ -79,16 +94,13 @@ class PlaylistData {
 			let targetVideo = this.videoList[index];
 			this.videoList[index] = this.videoList[index+1];
 			this.videoList[index+1] = targetVideo;
-			// update UI and keep this element selected
-			this._updateUi(index+1);
 		} else if (overflow) {
 			// put at the start of the list
 			let targetVideo = this.videoList[index];
 			this._removeVideo(index);
 			this.videoList.unshift(targetVideo);
-			// update UI and keep this element selected
-			this._updateUi(0);
 		}
+		this._considerMeUpdated();
 	}
 
 	// throws an error if index is out of range
@@ -98,26 +110,25 @@ class PlaylistData {
 		}
 	}
 
-	// Provides a deep copy of the video list
-	// @param onlyArrays - set to true to receive as an array of 2D arrays
-	getVideoList(onlyArrays=false) {
+	// Provides a deep copy of the video list.
+	getVideoList() {
 		let copyOfList = [];
 		for (let video of this.videoList) {
-			let newVideo;
-			if (onlyArrays) {
-				newVideo = [video.title, video.id];
-			} else {
-				newVideo = { title: video.title, id: video.id };
-			}
+			let newVideo = {
+				id: video.id,
+				title: video.title,
+				youtubeId: video.youtubeId
+			};
 			copyOfList.push(newVideo);
 		}
 		return copyOfList;
 	}
 
-	// Gives the playlist UI the updated playlist to display
-	// @param selectedIndex (optional) - index of video to set as selected
-	_updateUi(selectedIndex = null) {		
-		this.playlistUi.updateWebpage( this.getVideoList(), selectedIndex );
+	// Triggers data update stuff
+	_considerMeUpdated() {
+		for (let callback of this.subscriberCallbacks) {
+			callback( this.getVideoList() );
+		}
 	}
 
 	// Load a playlist from a pair data file; clears the previous playlist
@@ -144,7 +155,7 @@ class PlaylistData {
 			this.videoList = backupList;
 			throw error;
 		}
-		this._updateUi();
+		this._considerMeUpdated();
 	}
 }
 

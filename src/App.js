@@ -28,9 +28,9 @@ class App {
 
 		const CIRCULAR_BEHAVIOR_WHEN_MOVING_ITEMS = true;
 
+		this.playlistData = new PlaylistData();
 		this.errorUi = new ErrorUi(ERROR_TEXT_ID, ERROR_BUTTON_ID);
-		this.playlistUi = new PlaylistUi(VIDEO_FRAME_ID, PLAYLIST_ID, this.errorUi);
-		this.playlistData = new PlaylistData(PLAYLIST_ID, this.playlistUi);
+		this.playlistUi = new PlaylistUi(VIDEO_FRAME_ID, PLAYLIST_ID, this.playlistData, this.errorUi);
 		this.addVideoUi = new AddVideoUi(
 			ADD_VIDEO_TITLE_ID, ADD_VIDEO_URL_ID, ADD_VIDEO_BUTTON_ID,
 			this.playlistData, this.errorUi
