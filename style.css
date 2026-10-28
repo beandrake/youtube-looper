@@ -36,6 +36,11 @@ p {
   margin-bottom: 7px;
 }
 
+.error-section button{
+  /* a little space between the button and the text */
+  margin-right: 10px;
+}
+
 .flex-container {
   display: flex;
 }
