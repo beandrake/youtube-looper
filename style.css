@@ -77,6 +77,7 @@ button {
 }
 
 .right {
+  margin-bottom: 20px;
   float: left;
   /* A bit of an indent for aesthetics */
   padding-left: 15px;
@@ -87,9 +88,13 @@ button {
   white-space: nowrap;
 }
 
+#playlist input {
+  margin-bottom: 5px;
+}
+
 #add-video-form {
   /* A little spacing between it and the playlist */
-  padding-top: 10px;
+  margin-top: 7px;
   /* Because there are radio buttons above,
      indent a bit so it better aligns with
 	 the names of the videos in the list. */ 
