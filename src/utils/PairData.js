@@ -1,4 +1,4 @@
-import trimOuterWhiteSpace from './textUtilities.js';
+import TextOps from './TextOps.js';
 /**
  * PairData
  * Contains functions to save and load pair data. Conceptually, pair data
@@ -38,7 +38,7 @@ var PairData = new function() {
 		var pair = []; 
 		for (let index = 0; index < lineList.length; index++) {
 			// strip any surrounding white space
-			let line = trimOuterWhiteSpace( lineList[index] );
+			let line = TextOps.trimOuterWhiteSpace( lineList[index] );
 			// skip over empty lines
 			if (line === '') {
 				continue;

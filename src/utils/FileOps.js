@@ -1,4 +1,4 @@
-import trimOuterWhiteSpace from './textUtilities.js';
+import TextOps from './TextOps.js';
 /**
  * FileOps
  * Contains functions related to loading and saving files.

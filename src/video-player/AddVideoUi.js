@@ -1,5 +1,5 @@
 import YouTubeOps from './../utils/YouTubeOps.js';
-import trimOuterWhiteSpace from './../utils/textUtilities.js';
+import TextOps from './../utils/TextOps.js';
 import Listener from './common/Listener.js';
 
 /**
@@ -87,7 +87,7 @@ class AddVideoUi {
 	// Extract title from user input, or if none obtain from the video via API
 	async _titlePromiseFromInput(id) {
 		// if the user entered a viable title, we're done, just use that
-		var title = trimOuterWhiteSpace( this.titleInput.value );		
+		var title = TextOps.trimOuterWhiteSpace( this.titleInput.value );		
 		if (title !== '') {
 			return title;
 		}
