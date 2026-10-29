@@ -17,12 +17,12 @@ class App {
 		const ADD_VIDEO_TITLE_ID = 'title-input';
 		const ADD_VIDEO_URL_ID = 'url-input';
 		const ADD_VIDEO_BUTTON_ID = 'add-video-button';
-		const SAVE_BUTTON = 'save-button';
-		const LOAD_BUTTON = 'load-button';
-		const MOVE_EARLIER_BUTTON = 'move-earlier-button';
-		const MOVE_LATER_BUTTON = 'move-later-button';
-		const DELETE_BUTTON = 'delete-button';
-		const CLEAR_BUTTON = 'clear-button';
+		const SAVE_BUTTON_ID = 'save-button';
+		const LOAD_BUTTON_ID = 'load-button';
+		const MOVE_EARLIER_BUTTON_ID = 'move-earlier-button';
+		const MOVE_LATER_BUTTON_ID = 'move-later-button';
+		const DELETE_BUTTON_ID = 'delete-button';
+		const CLEAR_BUTTON_ID = 'clear-button';
 		const ERROR_TEXT_ID = 'error-text';
 		const ERROR_BUTTON_ID = 'error-button';
 
@@ -36,17 +36,17 @@ class App {
 			this.playlistData, this.errorUi
 		);
 		this.deleteVideoUi = new DeleteVideoUi(
-			DELETE_BUTTON,
+			DELETE_BUTTON_ID,
 			this.playlistData, this.playlistUi, this.errorUi
 		);
 		this.reorderVideoUi = new ReorderVideoUi(
-			MOVE_EARLIER_BUTTON, MOVE_LATER_BUTTON,
+			MOVE_EARLIER_BUTTON_ID, MOVE_LATER_BUTTON_ID,
 			this.playlistData, this.playlistUi, this.errorUi,
 			CIRCULAR_BEHAVIOR_WHEN_MOVING_ITEMS
 		);
-		this.saveUi = new SaveUi(SAVE_BUTTON, this.playlistData, this.errorUi);
-		this.loadUi = new LoadUi(LOAD_BUTTON, this.playlistData, this.errorUi);
-		this.clearAllUi = new ClearUi(CLEAR_BUTTON, this.playlistData, this.errorUi);
+		this.saveUi = new SaveUi(SAVE_BUTTON_ID, this.playlistData, this.errorUi);
+		this.loadUi = new LoadUi(LOAD_BUTTON_ID, this.playlistData, this.errorUi);
+		this.clearAllUi = new ClearUi(CLEAR_BUTTON_ID, this.playlistData, this.errorUi);
 	}
 
 	async initialize() {
