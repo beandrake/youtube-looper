@@ -127,7 +127,7 @@ class PlaylistData {
 	// Triggers data update stuff
 	_considerMeUpdated() {
 		for (let callback of this.subscriberCallbacks) {
-			callback( this.getVideoList() );
+			callback();
 		}
 	}
 
