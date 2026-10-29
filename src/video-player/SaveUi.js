@@ -1,7 +1,8 @@
 import PairData from './../utils/PairData.js';
 import FileOps from './../utils/FileOps.js';
+import Listener from './common/Listener.js';
 
-const DEFAULT_PLAYLIST_FILENAME = "playlist.txt";
+const PLAYLIST_FILENAME = "playlist.txt";
 /**
  * SaveUi
  * The interface to save playlist data to a local file.
@@ -12,12 +13,11 @@ class SaveUi {
 	// @playlistData - PlaylistData to add new videos to.
 	// @errorUi - ErrorUi to send errors to.
 	constructor(buttonId, playlistData, errorUi) {
-		this.saveButton = document.getElementById(buttonId);
-		
 		this.playlistData = playlistData;
 		this.errorUi = errorUi;
 
-		this.startSaveListener();
+		const buttonFunction = () => this.savePlaylistLocally();
+		this.button = new Listener(buttonId, buttonFunction);
 	}
 
 	// Adds a new video to the playlist based on text inputs.
@@ -32,25 +32,12 @@ class SaveUi {
 			}
 
 			var stringData = PairData.stringFromArray(arrayList);
-			FileOps.saveToFile(stringData, DEFAULT_PLAYLIST_FILENAME);
+			FileOps.saveToFile(stringData, PLAYLIST_FILENAME);
 		} catch (error) {
 			var message = "Problem saving playlist locally.";
 			this.errorUi.displayError(message);
 			return;
 		}
-	}
-
-	// Setup button.
-	startSaveListener() {
-		// When the listener calls our function, "this" won't be this object.
-		// So when creating the listener, we save a reference to this as self.
-		var self = this;
-		this.saveButton.addEventListener(
-			'click',
-			() => {
-				self.savePlaylistLocally();
-			}
-		);
 	}
 }
 

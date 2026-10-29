@@ -1,4 +1,6 @@
 import YouTubeOps from './../utils/YouTubeOps.js';
+import Listener from './common/Listener.js';
+
 /**
  * PlaylistUi
  * Manages the Playlist UI.
@@ -16,8 +18,17 @@ class PlaylistUi {
 
 		this.groupName = "video-option";
 		
+		// setup so when any radio button is clicked, loadVideo gets called
+		const callback = (event) => this.loadVideo(event.target.value);
+		this.radioListener = new Listener(playlistId, callback, 'change');
+
 		this._subscribeToData();
-		this.startLoadVideoListener();
+	}
+
+	// Whenever PlaylistData is updated, have it tell us to update the webpage.
+	_subscribeToData() {
+		const callback = () => this.updateWebpage();
+		this.playlistData.addSubscriber(callback);
 	}
 
 	// Replaces the YouTube video in the iframe with the user's selection
@@ -25,18 +36,6 @@ class PlaylistUi {
 		// create new looping embedded URL for iframe and apply it to the iframe
 		const newSource = YouTubeOps.generateLoopingUrl(youtubeId);
 		this.videoFrame.src = newSource;
-	}
-
-
-	// This makes it so loadVideo gets called when we click any radio button
-	startLoadVideoListener() {
-		var self = this;
-		this.playlistElement.addEventListener(
-			'change',
-			(event) => {
-				self.loadVideo(event.target.value);
-			}
-		);
 	}
 
 	// Returns index of video that is currently selected, or null if none
@@ -101,15 +100,6 @@ class PlaylistUi {
 		}
 		this.playlistElement.innerHTML = html;
 	}
-
-
-	// Whenever PlaylistData is updated, have it tell us to update the webpage.
-	_subscribeToData() {
-		const self = this;
-		const callback = () => self.updateWebpage();
-		this.playlistData.addSubscriber(callback);
-	}
-
 }
 
 export default PlaylistUi;

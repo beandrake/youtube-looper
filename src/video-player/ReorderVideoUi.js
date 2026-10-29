@@ -1,30 +1,35 @@
+import Listener from './common/Listener.js';
+
+const MOVE_EARLIER = true;
+const MOVE_LATER = false;
 /**
  * ReorderVideoUi
  * The interface that shifts video position in the playlist.
  */
 class ReorderVideoUi {
-	// @param upButtonId - the id for the up button element
-	// @param downButtonId - the id for the down button element
+	// @param earlierButtonId - id of "move earlier" button element
+	// @param laterButtonId - id of "move later" button element
 	// @param playlistData - PlaylistData to delete from
 	// @param playlistUi - PlaylistUi to retrieve selection from
 	// @param errorUi - ErrorUi to send errors to.
 	// @param treatListAsCircular - if true, videos moved past start/end loop to the other side
-	constructor(upButtonId, downButtonId,
+	constructor(earlierButtonId, laterButtonId,
 				playlistData, playlistUi, errorUi, treatListAsCircular=true) {
-		this.upButton = document.getElementById(upButtonId);
-		this.downButton = document.getElementById(downButtonId);
-		
-		this.treatListAsCircular = treatListAsCircular;
-
 		this.playlistData = playlistData;
 		this.playlistUi = playlistUi;
 		this.errorUi = errorUi;
+		
+		this.treatListAsCircular = treatListAsCircular;
 
-		this.startListeners();
+		const moveEarlierFunction = () => this.shiftVideo(MOVE_EARLIER);
+		this.earlierButton = new Listener(earlierButtonId, moveEarlierFunction);
+
+		const moveLaterFunction = () => this.shiftVideo(MOVE_LATER);
+		this.laterButton = new Listener(laterButtonId, moveLaterFunction);
 	}
 
 	// Shift selected video's position in the list.
-	// @param moveTowardsFront - which directi
+	// @param moveTowardsFront - if true shifts earlier, otherwise shifts later
 	shiftVideo(moveTowardsFront) {
 		// get selected video from Playlist UI.
 		const index = this.playlistUi.getSelectedVideoIndex();
@@ -49,29 +54,6 @@ class ReorderVideoUi {
 			return;
 		}
 	}
-
-
-	// Setup button listeners.
-	startListeners() {
-		// When the listener calls our function, "this" won't be this object.
-		// So when creating the listener, we save a reference to this as self.
-		var self = this;
-		this.upButton.addEventListener(
-			'click',
-			() => {
-				const moveTowardsFront = true;
-				self.shiftVideo(moveTowardsFront);
-			}
-		);
-		this.downButton.addEventListener(
-			'click',
-			() => {
-				const moveTowardsFront = false;
-				self.shiftVideo(moveTowardsFront);
-			}
-		);
-	}
-
 }
 
 export default ReorderVideoUi;

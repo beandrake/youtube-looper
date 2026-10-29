@@ -1,5 +1,7 @@
 import YouTubeOps from './../utils/YouTubeOps.js';
 import trimOuterWhiteSpace from './../utils/textUtilities.js';
+import Listener from './common/Listener.js';
+
 /**
  * AddVideoUi
  * The interface that adds a new video to a PlaylistUi.
@@ -15,14 +17,33 @@ class AddVideoUi {
 	constructor(titleId, urlId, buttonId, playlistData, errorUi) {
 		this.titleInput = document.getElementById(titleId);
 		this.urlInput = document.getElementById(urlId);
-		this.submitButton = document.getElementById(buttonId);
 		
 		this.playlistData = playlistData;
 		this.errorUi = errorUi;
 
-		this.startListener();
+		const buttonFunction = (event) => this.handleClick(event);
+		this.submitButton = new Listener(buttonId, buttonFunction);
 	}
 
+	// Depending on how the "click" was triggered, determine how to progress.
+	handleClick(event) {
+		// No matter what, if you click the submit button, this will
+		// trigger. But if your inputs and button are in the same form
+		// element, then pressing enter while an input is selected will
+		// also cause this to trigger.
+		
+		// prevent default form behavior of reloading the page
+		event.preventDefault();
+
+		// If cursor in title input, progress cursor and don't submit.
+		if (document.activeElement == this.titleInput) {
+			this.urlInput.focus();
+			return;	
+		}
+
+		this.addVideo();
+	}
+	
 	// Adds a new video to the playlist based on text inputs.
 	async addVideo() {			
 		var id = this._idFromInput();
@@ -39,34 +60,7 @@ class AddVideoUi {
 		this.clearInputs();
 	}
 
-	// Create listener to react to form submissions (enter or button click)
-	startListener() {
-		// When the listener calls our function, "this" won't be this object.
-		// So when creating the listener, we save a reference to this as self.
-		var self = this;
-		this.submitButton.addEventListener(
-			'click',
-			(event) => {
-				// No matter what, if you click the submit button, this will
-				// trigger. But if your inputs and button are in the same form
-				// element, then pressing enter while an input is selected will
-				// also cause this to trigger.
-				
-				// prevent default form behavior of reloading the page
-				event.preventDefault();
-
-				// If cursor in title input, progress cursor and don't submit.
-				if (document.activeElement == self.titleInput) {
-					self.urlInput.focus();
-					return;	
-				}
-
-				self.addVideo();
-			}
-		);
-	}
-
-	// removes all user text from associated UI elements
+	// Removes all user text from associated UI elements
 	clearInputs() {
 		this.titleInput.value = '';
 		this.urlInput.value = '';

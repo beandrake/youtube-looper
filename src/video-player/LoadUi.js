@@ -1,5 +1,6 @@
 import PairData from './../utils/PairData.js';
 import FileOps from './../utils/FileOps.js';
+import Listener from './common/Listener.js';
 /**
  * LoadUi
  * The interface to load playlist data from a local file.
@@ -11,15 +12,20 @@ class LoadUi {
 	// @playlistData - PlaylistData to load video data into.
 	// @errorUi - ErrorUi to send errors to.
 	constructor(buttonId, playlistData, errorUi) {
-		this.loadButton = document.getElementById(buttonId);
 		// file element, which is not applied to the DOM
 		this.fileElement = document.createElement("input");
 		this.fileElement.type = "file";
 		
 		this.playlistData = playlistData;
 		this.errorUi = errorUi;
+		
+		// forward click to hidden file input, letting user select a file
+		const loadFunction = () => this.fileElement.click();
+		this.loadButton = new Listener(buttonId, loadFunction);
 
-		this.startListeners();
+		// responds to the user selecting a file by loading the file's playlist
+		const fileFunction = () => this.loadPlaylist();
+		this.fileListener = new Listener(this.fileElement, fileFunction, ['change']);
 	}
 
 	// Adds a new video to the playlist based on text inputs.
@@ -32,29 +38,6 @@ class LoadUi {
 			return;
 		}
 		this.playlistData.loadFromArray(list);
-	}
-
-	// Set button to prompt file load, and file selection to result in loading.
-	startListeners() {
-		// When the listener calls our function, "this" won't be this object.
-		// So when creating the listener, we save a reference to this as self.
-		var self = this;
-
-		// forward click to hidden file input, letting user select a file
-		this.loadButton.addEventListener(
-			'click',
-			() => {
-				self.fileElement.click();
-			}
-		);
-
-		// responds to the user selecting a file by loading the file's playlist
-		this.fileElement.addEventListener(
-			'change',
-			() => {
-				self.loadPlaylist();
-			}
-		);
 	}
 }
 

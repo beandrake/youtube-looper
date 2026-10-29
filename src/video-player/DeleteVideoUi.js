@@ -1,3 +1,4 @@
+import Listener from './common/Listener.js';
 /**
  * DeleteVideoUi
  * The interface that deletes videos from the playlist.
@@ -7,14 +8,13 @@ class DeleteVideoUi {
 	// @param playlistData - PlaylistData to delete from
 	// @param playlistUi - PlaylistUi to retrieve selection from
 	// @param errorUi - ErrorUi to send errors to.
-	constructor(buttonId, playlistData, playlistUi, errorUi) {
-		this.deleteButton = document.getElementById(buttonId);
-		
+	constructor(buttonId, playlistData, playlistUi, errorUi) {		
 		this.playlistData = playlistData;
 		this.playlistUi = playlistUi;
 		this.errorUi = errorUi;
 
-		this.startListener();
+		const buttonFunction = () => this.deleteVideo();
+		this.button = new Listener(buttonId, buttonFunction);
 	}
 
 	// delete the selected entry in the video list
@@ -38,20 +38,6 @@ class DeleteVideoUi {
 			return;
 		}
 	}
-
-	// Setup button listener.
-	startListener() {
-		// When the listener calls our function, "this" won't be this object.
-		// So when creating the listener, we save a reference to this as self.
-		var self = this;
-		this.deleteButton.addEventListener(
-			'click',
-			() => {
-				self.deleteVideo();
-			}
-		);
-	}
-
 }
 
 export default DeleteVideoUi;

@@ -1,3 +1,5 @@
+import Listener from './common/Listener.js';
+
 /**
  * ErrorUi
  * Controls a text element to display error messages on
@@ -10,7 +12,9 @@ class ErrorUi {
 		this.errorMessageElement = document.getElementById(textId);
 		this.clearErrorButton = document.getElementById(buttonId);
 		this.clearError();
-		this.startClearErrorListener();
+
+		const callback = () => this.clearError();
+		this.buttonListener = new Listener(buttonId, callback);
 	}
 
 	// Display an error message and a button to clear the error message.
@@ -33,19 +37,6 @@ class ErrorUi {
 		this.errorMessageElement.innerText = "";
 		this.errorMessageElement.style.display = "none";
 		this.clearErrorButton.style.display = "none";
-	}
-
-	// Sets it so that when the button is pressed, the error is cleared.
-	startClearErrorListener() {
-		// When the listener calls our function, "this" won't be this object.
-		// So when creating the listener, we save a reference to this as self.
-		var self = this;
-		this.clearErrorButton.addEventListener(
-			'click',
-			() => {
-				self.clearError();
-			}
-		);
 	}
 }
 
