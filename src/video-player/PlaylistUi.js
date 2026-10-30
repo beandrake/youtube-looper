@@ -1,5 +1,7 @@
-import YouTubeOps from './../utils/YouTubeOps.js';
+// note: DOMPurify is imported in index.html
 import Listener from './common/Listener.js';
+import TextOps from './../utils/TextOps.js';
+import YouTubeOps from './../utils/YouTubeOps.js';
 
 /**
  * PlaylistUi
@@ -34,8 +36,14 @@ class PlaylistUi {
 	// Replaces the YouTube video in the iframe with the user's selection
 	loadVideo(youtubeId) {
 		// create new looping embedded URL for iframe and apply it to the iframe
-		const newSource = YouTubeOps.generateLoopingUrl(youtubeId);
-		this.videoFrame.src = newSource;
+		const generatedUrl = YouTubeOps.generateLoopingUrl(youtubeId);
+		
+		// Sanitize HTML to prevent HTML/script injection.
+		var cleanedUrl = DOMPurify.sanitize(
+			generatedUrl,   // Empty lists to disallow everything
+			{ ALLOWED_TAGS: [],	ALLOWED_ATTR: [], }
+		);
+		this.videoFrame.src = cleanedUrl;
 	}
 
 	// Returns index of video that is currently selected, or null if none
@@ -98,7 +106,18 @@ class PlaylistUi {
 				<label for="${elementId}">${video.title}</label><br>`;
 			index++;
 		}
-		this.playlistElement.innerHTML = html;
+
+		// Sanitize HTML to prevent HTML/script injection.
+		var cleanHtml = DOMPurify.sanitize(
+			html,
+			{	// Anything not in this list will be stripped away.
+				ALLOWED_TAGS: ['input', 'label', 'br'],
+				ALLOWED_ATTR: ['type', 'name', 'id', 'value', 'checked', 'for'],
+			}
+		);
+		
+		// apply what we created to the page
+		this.playlistElement.innerHTML = cleanHtml;
 	}
 }
 
