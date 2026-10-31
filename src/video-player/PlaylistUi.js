@@ -1,4 +1,4 @@
-// note: DOMPurify is imported in index.html
+import './../../lib/purify.min.js'; // DOMPurify
 import Listener from './common/Listener.js';
 import TextOps from './../utils/TextOps.js';
 import YouTubeOps from './../utils/YouTubeOps.js';
