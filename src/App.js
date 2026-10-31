@@ -1,4 +1,3 @@
-import IS_PROD from './../env/env.js';
 import ErrorUi from './video-player/ErrorUi.js';
 import AddVideoUi from './video-player/AddVideoUi.js';
 import DeleteVideoUi from './video-player/DeleteVideoUi.js';
