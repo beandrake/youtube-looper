@@ -36,6 +36,15 @@ p {
   margin-bottom: 7px;
 }
 
+.error-section {
+  padding-left: 25px;
+  padding-right: 25px;
+}
+.error-section p {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
 .error-section button{
   /* a little space between the button and the text */
   margin-right: 10px;

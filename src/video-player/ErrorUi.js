@@ -2,18 +2,18 @@ import Listener from './common/Listener.js';
 
 /**
  * ErrorUi
- * Controls a text element to display error messages on
+ * Controls a text element to display messages for the user
  * and a button to clear them.
 */
 class ErrorUi {
 	// @param textId - id for an element with innerText (such as <p>).
 	// @param buttonId - the id for a button element
 	constructor(textId, buttonId) {
-		this.errorMessageElement = document.getElementById(textId);
-		this.clearErrorButton = document.getElementById(buttonId);
-		this.clearError();
+		this.textElement = document.getElementById(textId);
+		this.clearMessageButton = document.getElementById(buttonId);
+		this.clearMessage();
 
-		const callback = () => this.clearError();
+		const callback = () => this.clearMessage();
 		this.buttonListener = new Listener(buttonId, callback);
 	}
 
@@ -21,22 +21,18 @@ class ErrorUi {
 	// @param error - either a string message or an Error object
 	displayError = (error) => {
 		const message = error instanceof Error ? error.message : error;
-		// construct error text with timestamp
-		const now = new Date();
-		const timestamp = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-		const outputText = timestamp + " ERROR: " + message;
 		// display error text
-		this.errorMessageElement.innerText = outputText;
-		this.errorMessageElement.style.display = "inline-block";
+		this.textElement.innerText = message;
+		this.textElement.style.display = "inline-block";
 		// reveal clear error button
-		this.clearErrorButton.style.display = "inline";
+		this.clearMessageButton.style.display = "inline";
 	}
 
 	// Clear the error text and hide the button
-	clearError = () => {
-		this.errorMessageElement.innerText = "";
-		this.errorMessageElement.style.display = "none";
-		this.clearErrorButton.style.display = "none";
+	clearMessage = () => {
+		this.textElement.innerText = "";
+		this.textElement.style.display = "none";
+		this.clearMessageButton.style.display = "none";
 	}
 }
 
