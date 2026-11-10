@@ -7,16 +7,16 @@ A web app that loops YouTube videos without ads.  Includes the ability to save a
 - [Running the app](#running-the-app)
 
 ## Features ##
-- Play a single YouTube video on repeat without ads.
+- Play a single YouTube video on loop without ads.
 - Curate a video list for quick access.
 - Optionally give each video a custom label.
 - Save your video list, then load it later.
-- No cookies or tracking, and no accounts necessary.
+- No accounts necessary.
 
 ## Why does this exist? ##
-In the beginning, I just wanted to listen to a single song on repeat.  I found the song on YouTube, but YouTube's interface doesn't include the ability to automatically repeat a video. I did some research and found that oddly enough, it was possible to loop YouTube videos, but it required using an iframe. I wrote the simple HTML to make an iframe, spun up a local Python web server to run it, and I was satisfied for awhile.
+In the beginning, I just wanted to listen to a single song on repeat.  I found the song on YouTube, but YouTube's interface doesn't include the ability to conveniently repeat a video. I did some research and found that it was possible to loop YouTube videos by using an iframe, so I wrote the simple HTML to make my custom iframe, spun up a local Python web server to run it, and just like that I was listening to the song as it endlessly looped. I was satisfied for awhile.
 
-But periodically I would get the desire to switch to a different song, and each time I would need to manually extract the video ID from the URL and apply it to the iframe's source URL. So decided to make an interface that would automate most of that process. Over time I kept repeating that pattern of finding a pain point, researching solutions, and implementing a new feature, and soon enough I had a CRUD app with a playlist that I was making use of on a daily basis.
+But periodically I would get the desire to loop a different song, and each time I would need to manually extract the video ID from the YouTube URL and work it into the iframe's source URL. Whenever I find myself manually repeating a task my instinct is to automate, so I made an interface that parsed and converted the URL for me. Over time I kept repeating that pattern of finding a pain point, researching solutions, and implementing a new feature, and soon enough I had a CRUD app with a playlist that I was making use of on a daily basis.
 
 I've really enjoyed the process of making something I regularly use, and I've learned a lot in the process.
 
