@@ -1,4 +1,5 @@
 import ErrorUi from './video-player/ErrorUi.js';
+import YouTubeUi from './video-player/YouTubeUi.js';
 import AddVideoUi from './video-player/AddVideoUi.js';
 import DeleteVideoUi from './video-player/DeleteVideoUi.js';
 import ReorderVideoUi from './video-player/ReorderVideoUi.js';
@@ -7,13 +8,16 @@ import PlaylistUi from './video-player/PlaylistUi.js';
 import SaveUi from './video-player/SaveUi.js';
 import LoadUi from './video-player/LoadUi.js';
 import ClearUi from './video-player/ClearUi.js';
+import HotkeyUi from './video-player/HotkeyUi.js';
 
 const DEFAULT_PLAYLIST_FILE = './data/playlist.txt';
+const DEFAULT_VIDEO = "SRczGJ-4M5g"; // Darude - Sandstorm
 
 class App {
 	constructor() {		
 		const PLAYLIST_ID = 'playlist';
-		const VIDEO_FRAME_ID = 'youtube-frame';
+		const VIDEO_DIV_ID = 'youtube-player';
+		//const VIDEO_FRAME_ID = 'youtube-frame';
 		const ADD_VIDEO_TITLE_ID = 'title-input';
 		const ADD_VIDEO_URL_ID = 'url-input';
 		const ADD_VIDEO_BUTTON_ID = 'add-video-button';
@@ -30,7 +34,8 @@ class App {
 
 		this.playlistData = new PlaylistData();
 		this.errorUi = new ErrorUi(ERROR_TEXT_ID, ERROR_BUTTON_ID);
-		this.playlistUi = new PlaylistUi(VIDEO_FRAME_ID, PLAYLIST_ID, this.playlistData, this.errorUi);
+		this.youtubeUi = new YouTubeUi(VIDEO_DIV_ID, DEFAULT_VIDEO, this.errorUi);
+		this.playlistUi = new PlaylistUi(PLAYLIST_ID, this.playlistData, this.youtubeUi, this.errorUi);
 		this.addVideoUi = new AddVideoUi(
 			ADD_VIDEO_TITLE_ID, ADD_VIDEO_URL_ID, ADD_VIDEO_BUTTON_ID,
 			this.playlistData, this.errorUi
@@ -47,6 +52,7 @@ class App {
 		this.saveUi = new SaveUi(SAVE_BUTTON_ID, this.playlistData, this.errorUi);
 		this.loadUi = new LoadUi(LOAD_BUTTON_ID, this.playlistData, this.errorUi);
 		this.clearAllUi = new ClearUi(CLEAR_BUTTON_ID, this.playlistData, this.errorUi);
+		this.hotkeyUi = new HotkeyUi(this.youtubeUi, this.errorUi);
 	}
 
 	async initialize() {

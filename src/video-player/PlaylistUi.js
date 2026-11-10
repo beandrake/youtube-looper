@@ -8,14 +8,14 @@ import YouTubeOps from './../utils/YouTubeOps.js';
  * Manages the Playlist UI.
  */
 class PlaylistUi {
-	// @param videoFrameId - id of iframe element containing videos
 	// @param playlistId - id of element which will contain playlist entries
 	// @param playlistData - PlaylistData to translate into a view
+	// @param youtubeUi - YouTubeUi to send commands to
 	// @param errorUi - ErrorUi to send errors to	
-	constructor(videoFrameId, playlistId, playlistData, errorUi) {
-		this.videoFrame = document.getElementById(videoFrameId);
+	constructor(playlistId, playlistData, youtubeUi, errorUi) {
 		this.playlistElement = document.getElementById(playlistId);
 		this.playlistData = playlistData;
+		this.youtubeUi = youtubeUi;
 		this.errorUi = errorUi;
 
 		this.groupName = "video-option";
@@ -43,7 +43,9 @@ class PlaylistUi {
 			generatedUrl,   // Empty lists to disallow everything
 			{ ALLOWED_TAGS: [],	ALLOWED_ATTR: [], }
 		);
-		this.videoFrame.src = cleanedUrl;
+
+		//this.videoFrame.src = cleanedUrl;
+		this.youtubeUi.loadAndPlayVideo(youtubeId);
 	}
 
 	// Returns index of video that is currently selected, or null if none
