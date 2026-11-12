@@ -1,6 +1,6 @@
 import YouTubeOps from './../utils/YouTubeOps.js';
 import TextOps from './../utils/TextOps.js';
-import Listener from './common/Listener.js';
+import Listener from './../common/Listener.js';
 
 /**
  * AddVideoUi

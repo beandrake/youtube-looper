@@ -1,4 +1,4 @@
-import Listener from './common/Listener.js';
+import Listener from './../common/Listener.js';
 /**
  * DeleteVideoUi
  * The interface that deletes videos from the playlist.

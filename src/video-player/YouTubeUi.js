@@ -1,5 +1,5 @@
 // There are notes on the YouTube IFrame API at the bottom of this file.
-import YouTubeIframeApiLoader from './common/YouTubeIframeApiLoader.js';
+import YouTubeIframeApiLoader from './../common/YouTubeIframeApiLoader.js';
 import Log from './../utils/Log.js';
 
 /**

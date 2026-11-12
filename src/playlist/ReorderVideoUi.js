@@ -1,4 +1,4 @@
-import Listener from './common/Listener.js';
+import Listener from './../common/Listener.js';
 
 const MOVE_EARLIER = true;
 const MOVE_LATER = false;

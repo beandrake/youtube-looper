@@ -1,4 +1,4 @@
-import Listener from './common/Listener.js';
+import Listener from './../common/Listener.js';
 /**
  * ClearUi
  * Clears all songs from the playlist.
