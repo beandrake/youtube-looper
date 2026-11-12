@@ -1,4 +1,5 @@
 // There are notes on the YouTube IFrame API at the bottom of this file.
+import YouTubeIframeApiLoader from './common/YouTubeIframeApiLoader.js';
 import Log from './../utils/Log.js';
 
 /**
@@ -8,69 +9,17 @@ import Log from './../utils/Log.js';
  */
 class YouTubeUi {
 	// @param iframeOrDivId - iframe to use, or div to replace with iframe
-	// @param youtubeId - the id of a YouTube video to initially load
-	// @param errorUi - ErrorUi to send errors to	
-	constructor(iframeOrDivId, youtubeId, errorUi) {
+	// @param youtubeId - the id of a YouTube video to initially load	
+	constructor(iframeOrDivId, youtubeId) {
 		this.iframeOrDivId = iframeOrDivId;
 		this.default_youtubeId = youtubeId;
-		this.errorUi = errorUi;
 		
 		this.width = "560"
 		this.height = "315"
-		this.frameborder = "0"
-		this.allowfullscreen = true;
-	
-		YouTubeUi._queueInitialization(this);
-	}
 
-
-	static apiReady = false;
-	static apiLoadStarted = false;
-	static waitingToInitializeList = [];
-	
-	// Schedules initialization of new instances depending on API readiness.
-	static _queueInitialization(newInstance) {		
-		// YouTube IFrame API needs to be dynamically loaded from web endpoint.
-		if (YouTubeUi.apiReady) {
-			// If API is already ready, our new instance can get started now.
-			newInstance.initialize();
-		} else {
-			// If API isn't ready, put this instance in a wait list; when the
-			// API is ready we'll tell them all to initialize.
-			YouTubeUi.waitingToInitializeList.push(newInstance);
-			
-			// ...and start loading the API if nobody else has.
-			if (!YouTubeUi.apiLoadStarted) {
-				YouTubeUi.startLoadingApi();
-			}
-		}
-	}
-
-	// Dynamically load YouTube IFrame API.
-	static startLoadingApi() {
-		YouTubeUi.apiLoadStarted = true;
-		// create new disembodied script element
-		var apiScript = document.createElement('script');
-		apiScript.src = "https://www.youtube.com/iframe_api";
-		// insert script element into the DOM, which will start loading it
-		let firstDomScript = document.getElementsByTagName('script')[0];
-		firstDomScript.parentNode.insertBefore(apiScript, firstDomScript);
-
-		// When the API is ready it calls this global function.
-		window.onYouTubeIframeAPIReady = () => {
-			//Log.toConsole("YouTube IFrame Player API loaded.");
-			YouTubeUi.apiReady = true;
-			YouTubeUi._initializeWaitingInstances();
-		}
-	}
-	
-	
-	// Kicks off initialization of any instances waiting for the API to load.
-	static _initializeWaitingInstances() {
-		for (let instance of YouTubeUi.waitingToInitializeList) {
-			instance.initialize();
-		}
-		YouTubeUi.waitingToInitializeList = [];
+		//console.log(`constructor: ${this.iframeOrDivId}`);
+		const myCallback = () => this.initialize();
+		YouTubeIframeApiLoader.callMyCallbackWhenApiIsReady(myCallback);
 	}
 
 
@@ -95,6 +44,7 @@ class YouTubeUi {
 		};
 
 		// After making YT.Player, leave it alone until onReady event!
+		//console.log(`initialize: ${this.iframeOrDivId}`);
 		this.player = new YT.Player(this.iframeOrDivId, settings);		
 	}
 

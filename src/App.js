@@ -34,7 +34,7 @@ class App {
 
 		this.playlistData = new PlaylistData();
 		this.errorUi = new ErrorUi(ERROR_TEXT_ID, ERROR_BUTTON_ID);
-		this.youtubeUi = new YouTubeUi(VIDEO_DIV_ID, DEFAULT_VIDEO, this.errorUi);
+		this.youtubeUi = new YouTubeUi(VIDEO_DIV_ID, DEFAULT_VIDEO);
 		this.playlistUi = new PlaylistUi(PLAYLIST_ID, this.playlistData, this.youtubeUi, this.errorUi);
 		this.addVideoUi = new AddVideoUi(
 			ADD_VIDEO_TITLE_ID, ADD_VIDEO_URL_ID, ADD_VIDEO_BUTTON_ID,
