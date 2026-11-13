@@ -19,27 +19,31 @@ var FileOps = new function() {
 			);
 	}
 
-	// Returns a promise for a string containing the contents of the file in
-	// an HTML element, such as <input type="file">.
-	// @param element - an element with a file
+	// Returns a promise for an array of strings containing the contents of 
+	// the files in an HTML element, such as <input type="file">.
+	// @param element - an element with 1 or more files
 	this.loadFromInputFileElement = async function (element) {
 		if (element.files.length === 0) {
 			throw new Error("Can't load file, no file selected.");
 		}
 
-		var file = element.files[0];
+		//var file = element.files[0];
+		console.log(element.files);
+		var dataList = [];
+		for (let file of element.files) {
+			// FileReader is async, so wrap it in a promise and wait for resolution
+			var fileContents = await new Promise(
+				(resolve) => {
+					const fileReader = new FileReader();
+					fileReader.onload = (e) => resolve(fileReader.result);
+					fileReader.onerror = (e) => reject(e);
+					fileReader.readAsText(file);
+				}
+			);
 
-		// FileReader is async, so wrap it in a promise and wait for resolution
-		var fileContents = await new Promise(
-			(resolve) => {
-				const fileReader = new FileReader();
-				fileReader.onload = (e) => resolve(fileReader.result);
-				fileReader.onerror = (e) => reject(e);
-				fileReader.readAsText(file);
-			}
-		);
-		
-		return fileContents;
+			dataList.push(fileContents);
+		}
+		return dataList;
 	}
 	
 	// Given an array of 2-item arrays, save locally to a file

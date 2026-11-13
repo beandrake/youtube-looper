@@ -19,6 +19,8 @@ class LoadUi {
 		this.fileElement.type = "file";
 		// During user file selection, default to only show these file types.
 		this.fileElement.accept = ".json";
+		// Enables user to select multiple files if they want.
+		this.fileElement.multiple = "x";
 		
 		// forward click to hidden file input, letting user select a file
 		const loadFunction = () => this.fileElement.click();
@@ -29,20 +31,25 @@ class LoadUi {
 		this.fileListener = new Listener(this.fileElement, fileFunction, ['change']);
 	}
 
-	// Load playlist from user-selected file.
+	// Load playlist from user-selected file(s).
 	async loadPlaylist() {			
 		try {			
-			var stringData = await FileOps.loadFromInputFileElement(this.fileElement);			
+			var dataList = await FileOps.loadFromInputFileElement(this.fileElement);
 		} catch (error) {
 			this.errorUi.displayError("Error loading file.");
 			return;
 		}
 
 		try {						
-			var videoList = JSON.parse(stringData);
-			this.playlistData.loadFromArray(videoList);
+			var aggregateVideoList = [];
+			for (let data of dataList) {
+				let videoList = JSON.parse(data);
+				aggregateVideoList = aggregateVideoList.concat(videoList);
+			}
+			this.playlistData.loadFromArray(aggregateVideoList);
 		} catch (error) {
 			this.errorUi.displayError("File contains invalid data.");
+			throw error;
 			return;
 		}
 	}
