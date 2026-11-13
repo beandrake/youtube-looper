@@ -10,7 +10,7 @@ import LoadUi from './playlist/LoadUi.js';
 import ClearUi from './playlist/ClearUi.js';
 import HotkeyUi from './video-player/HotkeyUi.js';
 
-const DEFAULT_PLAYLIST_FILE = './data/playlist.txt';
+const DEFAULT_PLAYLIST_FILE = './data/default_playlist.json';
 const DEFAULT_VIDEO = "SRczGJ-4M5g"; // Darude - Sandstorm
 
 class App {

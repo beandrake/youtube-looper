@@ -28,9 +28,6 @@ var FileOps = new function() {
 		}
 
 		var file = element.files[0];
-		if ( !file.type.startsWith("text") ) {
-			throw new Error("Unsupported file type, must be a text file.");
-		}
 
 		// FileReader is async, so wrap it in a promise and wait for resolution
 		var fileContents = await new Promise(

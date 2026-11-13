@@ -1,8 +1,7 @@
-import PairData from './../utils/PairData.js';
 import FileOps from './../utils/FileOps.js';
 import Listener from './../common/Listener.js';
 
-const PLAYLIST_FILENAME = "playlist.txt";
+const PLAYLIST_FILENAME = "playlist.json";
 /**
  * SaveUi
  * The interface to save playlist data to a local file.
@@ -20,18 +19,18 @@ class SaveUi {
 		this.button = new Listener(buttonId, buttonFunction);
 	}
 
-	// Adds a new video to the playlist based on text inputs.
+	// Save the playlist to a local file.
 	savePlaylistLocally() {			
 		try {
 			const videoList = this.playlistData.getVideoList(true);
 			
-			// convert to array of 2D arrays
-			const arrayList = [];
+			// Remove IDs, as they don't need to be preserved.
 			for (let video of videoList) {
-				arrayList.push( [video.title, video.youtubeId] );
+				delete video.id;
 			}
 
-			var stringData = PairData.stringFromArray(arrayList);
+			// Convert from object to JSON, then save as file
+			const stringData = JSON.stringify(videoList);
 			FileOps.saveToFile(stringData, PLAYLIST_FILENAME);
 		} catch (error) {
 			var message = "Problem saving playlist locally.";

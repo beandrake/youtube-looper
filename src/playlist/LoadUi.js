@@ -1,4 +1,3 @@
-import PairData from './../utils/PairData.js';
 import FileOps from './../utils/FileOps.js';
 import Listener from './../common/Listener.js';
 /**
@@ -12,12 +11,14 @@ class LoadUi {
 	// @playlistData - PlaylistData to load video data into.
 	// @errorUi - ErrorUi to send errors to.
 	constructor(buttonId, playlistData, errorUi) {
+		this.playlistData = playlistData;
+		this.errorUi = errorUi;		
+		
 		// file element, which is not applied to the DOM
 		this.fileElement = document.createElement("input");
 		this.fileElement.type = "file";
-		
-		this.playlistData = playlistData;
-		this.errorUi = errorUi;
+		// During user file selection, default to only show these file types.
+		this.fileElement.accept = ".json";
 		
 		// forward click to hidden file input, letting user select a file
 		const loadFunction = () => this.fileElement.click();
@@ -28,16 +29,22 @@ class LoadUi {
 		this.fileListener = new Listener(this.fileElement, fileFunction, ['change']);
 	}
 
-	// Adds a new video to the playlist based on text inputs.
+	// Load playlist from user-selected file.
 	async loadPlaylist() {			
 		try {			
-			var stringData = await FileOps.loadFromInputFileElement(this.fileElement);
-			var list = PairData.arrayFromString(stringData);
+			var stringData = await FileOps.loadFromInputFileElement(this.fileElement);			
 		} catch (error) {
-			this.errorUi.displayError(error);
+			this.errorUi.displayError("Error loading file.");
 			return;
 		}
-		this.playlistData.loadFromArray(list);
+
+		try {						
+			var videoList = JSON.parse(stringData);
+			this.playlistData.loadFromArray(videoList);
+		} catch (error) {
+			this.errorUi.displayError("File contains invalid data.");
+			return;
+		}
 	}
 }
 

@@ -1,5 +1,5 @@
-import PairData from './../utils/PairData.js';
 import FileOps from './../utils/FileOps.js';
+import YouTubeOps from './../utils/YouTubeOps.js';
 /**
  * PlaylistData
  * Manages the data for playlist records (pairs of titles and YouTube IDs).
@@ -35,6 +35,9 @@ class PlaylistData {
 
 	// Add a video to the end of the list.
 	_appendVideo(title, youtubeId) {
+		if (youtubeId.length != YouTubeOps.VIDEO_ID_LENGTH) {
+			throw new TypeError("Invalid YouTube video ID.");
+		}
 		var video = {
 			id: this._assignNewId(),
 			title: title,
@@ -135,21 +138,21 @@ class PlaylistData {
 	// @param source - file on the web containing playlist data
 	async loadFromWebFile(source) {
 		var stringData = await FileOps.loadFromWebFile(source);
-		var dataList = PairData.arrayFromString(stringData);
+		var dataList = JSON.parse(stringData);
 		this.loadFromArray(dataList);
 
 		return true;
 	}
 
 	// Load playlist from array; clears the previous playlist
-	// @param list - an array of 2-dimensional arrays containing titles and IDs
+	// @param list - an array of objects with youtubeId and title, at minimum
 	loadFromArray(list) {
 		var backupList = this.videoList;
 		this.videoList = [];
 
 		try {
-			for (let pair of list) {
-				this._appendVideo( pair[0], pair[1] );
+			for (let video of list) {
+				this._appendVideo( video.title, video.youtubeId );
 			}
 		} catch (error) {
 			this.videoList = backupList;
