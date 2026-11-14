@@ -19,7 +19,7 @@ class Listener {
 		}
 
 		// if eventTypes is just a single string, pack it into an array
-		if (typeof element === 'string' || element instanceof String) {
+		if (typeof eventTypes === 'string' || eventTypes instanceof String) {
 			this.eventTypes = [eventTypes];
 		} else {
 			this.eventTypes = eventTypes;
