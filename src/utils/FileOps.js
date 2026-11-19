@@ -1,4 +1,3 @@
-import TextOps from './TextOps.js';
 /**
  * FileOps
  * Contains functions related to loading and saving files.
@@ -23,12 +22,12 @@ var FileOps = new function() {
 	// the files in an HTML element, such as <input type="file">.
 	// @param element - an element with 1 or more files
 	this.loadFromInputFileElement = async function (element) {
+		//console.log(element.files);
 		if (element.files.length === 0) {
 			throw new Error("Can't load file, no file selected.");
 		}
 
-		//var file = element.files[0];
-		console.log(element.files);
+		// Put the contents of each file in an array
 		var dataList = [];
 		for (let file of element.files) {
 			// FileReader is async, so wrap it in a promise and wait for resolution
