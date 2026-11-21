@@ -1,3 +1,4 @@
+import EventSystem from './../common/EventSystem.js';
 import './../../lib/purify.min.js'; // DOMPurify
 import Listener from './../common/Listener.js';
 import TextOps from './../utils/TextOps.js';
@@ -9,28 +10,27 @@ import YouTubeOps from './../utils/YouTubeOps.js';
  */
 class PlaylistUi {
 	// @param playlistId - id of element which will contain playlist entries
-	// @param playlistData - PlaylistData to translate into a view
 	// @param youtubeUi - YouTubeUi to send commands to
 	// @param errorUi - ErrorUi to send errors to	
-	constructor(playlistId, playlistData, youtubeUi, errorUi) {
+	constructor(playlistId, youtubeUi, errorUi) {
 		this.playlistElement = document.getElementById(playlistId);
-		this.playlistData = playlistData;
 		this.youtubeUi = youtubeUi;
 		this.errorUi = errorUi;
 
 		this.groupName = "video-option";
-		
-		// setup so when any radio button is clicked, loadVideo gets called
-		const callback = (event) => this.loadVideo(event.target.value);
-		this.radioListener = new Listener(playlistId, callback, 'change');
 
-		this._subscribeToData();
+		this._setupEventListening();
 	}
 
-	// Whenever PlaylistData is updated, have it tell us to update the webpage.
-	_subscribeToData() {
-		const callback = () => this.updateWebpage();
-		this.playlistData.addSubscriber(callback);
+	// For both DOM events and custom events.
+	_setupEventListening() {
+		// When any radio button is clicked, loadVideo gets called
+		let callback = (event) => this.loadVideo(event.target.value);
+		this.radioListener = new Listener(this.playlistElement, callback, 'change');
+
+		// Whenever PlaylistData is updated, we want to update our UI to match.
+		callback = (event) => this.updateWebpage(event);
+		EventSystem.subscribe("playlist.updated", callback);
 	}
 
 	// Replaces the YouTube video in the iframe with the user's selection
@@ -87,11 +87,12 @@ class PlaylistUi {
 
 
 	// Updates playlistElement's innerHTML to represent PlaylistData
-	updateWebpage() {
+	// @param event - contains PlaylistData
+	updateWebpage(event) {
 		// record selection so we can select it again, if it still exists
 		const selectionId = this.getSelectedVideoId();
 		
-		const videoList = this.playlistData.getVideoList();
+		const videoList = event.videoList;
 		
 		// Generates HTML that we will insert within the playlist HTML element
 		let html = '';

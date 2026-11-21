@@ -11,7 +11,7 @@ import ClearUi from './playlist/ClearUi.js';
 import HotkeyUi from './video-player/HotkeyUi.js';
 
 const DEFAULT_PLAYLIST_FILE = './data/default_playlist.json';
-const DEFAULT_VIDEO = "SRczGJ-4M5g"; // Darude - Sandstorm
+const DEFAULT_VIDEO = "zKYNITx17Mw"; // "SRczGJ-4M5g"; // Darude - Sandstorm
 
 class App {
 	constructor() {		
@@ -35,7 +35,7 @@ class App {
 		this.playlistData = new PlaylistData();
 		this.errorUi = new ErrorUi(ERROR_TEXT_ID, ERROR_BUTTON_ID);
 		this.youtubeUi = new YouTubeUi(VIDEO_DIV_ID, DEFAULT_VIDEO);
-		this.playlistUi = new PlaylistUi(PLAYLIST_ID, this.playlistData, this.youtubeUi, this.errorUi);
+		this.playlistUi = new PlaylistUi(PLAYLIST_ID, this.youtubeUi, this.errorUi);
 		this.addVideoUi = new AddVideoUi(
 			ADD_VIDEO_TITLE_ID, ADD_VIDEO_URL_ID, ADD_VIDEO_BUTTON_ID,
 			this.playlistData, this.errorUi

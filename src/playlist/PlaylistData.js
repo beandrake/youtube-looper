@@ -1,3 +1,4 @@
+import EventSystem from './../common/EventSystem.js';
 import FileOps from './../utils/FileOps.js';
 import YouTubeOps from './../utils/YouTubeOps.js';
 /**
@@ -9,11 +10,6 @@ class PlaylistData {
 		this.videoList = [];
 		this.nextId = 100;
 		this.subscriberCallbacks = [];
-	}
-
-	// Provide a function to call when this object's data gets updated.
-	addSubscriber(callback) {
-		this.subscriberCallbacks.push(callback);
 	}
 	
 	// When adding a new item to the list, this generates a distinct id.
@@ -129,9 +125,8 @@ class PlaylistData {
 
 	// Triggers data update stuff
 	_considerMeUpdated() {
-		for (let callback of this.subscriberCallbacks) {
-			callback();
-		}
+		const event = { videoList: this.getVideoList() };
+		EventSystem.publish("playlist.updated", event);
 	}
 
 	// Load a playlist from a pair data file; clears the previous playlist
