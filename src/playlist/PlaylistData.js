@@ -9,7 +9,6 @@ class PlaylistData {
 	constructor() {
 		this.videoList = [];
 		this.nextId = 100;
-		this.subscriberCallbacks = [];
 	}
 	
 	// When adding a new item to the list, this generates a distinct id.
