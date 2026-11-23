@@ -1,3 +1,4 @@
+import EventSystem from './../common/EventSystem.js';
 import FileOps from './../utils/FileOps.js';
 import Listener from './../common/Listener.js';
 
@@ -10,10 +11,8 @@ const PLAYLIST_FILENAME = "playlist.json";
 class SaveUi {
 	// @param buttonId - id for a button input element.
 	// @playlistData - PlaylistData to add new videos to.
-	// @errorUi - ErrorUi to send errors to.
-	constructor(buttonId, playlistData, errorUi) {
+	constructor(buttonId, playlistData) {
 		this.playlistData = playlistData;
-		this.errorUi = errorUi;
 
 		const buttonFunction = () => this.savePlaylistLocally();
 		this.button = new Listener(buttonId, buttonFunction);
@@ -34,7 +33,7 @@ class SaveUi {
 			FileOps.saveToFile(stringData, PLAYLIST_FILENAME);
 		} catch (error) {
 			var message = "Problem saving playlist locally.";
-			this.errorUi.displayError(message);
+			EventSystem.publishError(message);
 			return;
 		}
 	}

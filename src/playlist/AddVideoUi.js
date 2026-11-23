@@ -1,3 +1,4 @@
+import EventSystem from './../common/EventSystem.js';
 import YouTubeOps from './../utils/YouTubeOps.js';
 import TextOps from './../utils/TextOps.js';
 import Listener from './../common/Listener.js';
@@ -13,13 +14,11 @@ class AddVideoUi {
 	// @param urlId - id for a text input element.
 	// @param buttonId - the id for a button element
 	// @param playlistData - PlaylistData to add new videos to.
-	// @param errorUi - ErrorUi to send errors to.
-	constructor(titleId, urlId, buttonId, playlistData, errorUi) {
+	constructor(titleId, urlId, buttonId, playlistData) {
 		this.titleInput = document.getElementById(titleId);
 		this.urlInput = document.getElementById(urlId);
 		
 		this.playlistData = playlistData;
-		this.errorUi = errorUi;
 
 		const buttonFunction = (event) => this.handleClick(event);
 		this.submitButton = new Listener(buttonId, buttonFunction);
@@ -79,7 +78,7 @@ class AddVideoUi {
 			}
 		} catch (error) {
 			var message = "Could not extract ID, please provide a YouTube video URL.";			
-			this.errorUi.displayError(message);
+			EventSystem.publishError(message);
 			return null;
 		}
 	}
@@ -98,9 +97,9 @@ class AddVideoUi {
 		} catch (error) {
 			if (error instanceof SyntaxError) {
 				let message = "YouTube didn't return a title for that video ID.";
-				this.errorUi.displayError(message);
+				EventSystem.publishError(message);
 			} else {
-				this.errorUi.displayError(error);
+				EventSystem.publishError(error);
 			}
 			return null;
 		}

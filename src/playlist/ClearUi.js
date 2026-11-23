@@ -6,10 +6,8 @@ import Listener from './../common/Listener.js';
 class ClearUi {
 	// @param buttonId - id for a button element.
 	// @playlistData - PlaylistData to add new videos to.
-	// @errorUi - ErrorUi to send errors to.
-	constructor(buttonId, playlistData, errorUi) {				
+	constructor(buttonId, playlistData) {				
 		this.playlistData = playlistData;
-		this.errorUi = errorUi;
 
 		const buttonFunction = () => this.playlistData.clearAll();
 		this.button = new Listener(buttonId, buttonFunction);

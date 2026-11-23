@@ -1,3 +1,4 @@
+import EventSystem from './../common/EventSystem.js';
 import FileOps from './../utils/FileOps.js';
 import Listener from './../common/Listener.js';
 /**
@@ -9,10 +10,8 @@ import Listener from './../common/Listener.js';
 class LoadUi {
 	// @param buttonId - id for a button that triggers loading
 	// @playlistData - PlaylistData to load video data into.
-	// @errorUi - ErrorUi to send errors to.
-	constructor(buttonId, playlistData, errorUi) {
+	constructor(buttonId, playlistData) {
 		this.playlistData = playlistData;
-		this.errorUi = errorUi;		
 		
 		// file element, which is not applied to the DOM
 		this.fileElement = document.createElement("input");
@@ -36,7 +35,7 @@ class LoadUi {
 		try {			
 			var dataList = await FileOps.loadFromInputFileElement(this.fileElement);
 		} catch (error) {
-			this.errorUi.displayError("Error loading file.");
+			EventSystem.publishError("Error loading file.");
 			return;
 		}
 
@@ -48,7 +47,7 @@ class LoadUi {
 			}
 			this.playlistData.loadFromArray(aggregateVideoList);
 		} catch (error) {
-			this.errorUi.displayError("File contains invalid data.");
+			EventSystem.publishError("File contains invalid data.");
 			throw error;
 			return;
 		}

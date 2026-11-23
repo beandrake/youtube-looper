@@ -1,3 +1,4 @@
+import EventSystem from './../common/EventSystem.js';
 import Listener from './../common/Listener.js';
 
 /**
@@ -13,8 +14,18 @@ class ErrorUi {
 		this.clearMessageButton = document.getElementById(buttonId);
 		this.clearMessage();
 
-		const callback = () => this.clearMessage();
-		this.buttonListener = new Listener(buttonId, callback);
+		this._setupEventListening();
+	}
+
+	// For both DOM events and custom events.
+	_setupEventListening() {
+		// Listen to the (sometimes hidden) button that clears the message.
+		var callback = () => this.clearMessage();
+		this.buttonListener = new Listener(this.clearMessageButton, callback);
+
+		// Respond to custom error events by displaying any user messages.
+		callback = (event) => this.displayError(event.details.errorMessage);
+		EventSystem.subscribe("error", callback);
 	}
 
 	// Display an error message and a button to clear the error message.

@@ -1,3 +1,4 @@
+import EventSystem from './../common/EventSystem.js';
 import Listener from './../common/Listener.js';
 
 const MOVE_EARLIER = true;
@@ -11,13 +12,11 @@ class ReorderVideoUi {
 	// @param laterButtonId - id of "move later" button element
 	// @param playlistData - PlaylistData to delete from
 	// @param playlistUi - PlaylistUi to retrieve selection from
-	// @param errorUi - ErrorUi to send errors to.
 	// @param treatListAsCircular - if true, videos moved past start/end loop to the other side
 	constructor(earlierButtonId, laterButtonId,
-				playlistData, playlistUi, errorUi, treatListAsCircular=true) {
+				playlistData, playlistUi, treatListAsCircular=true) {
 		this.playlistData = playlistData;
 		this.playlistUi = playlistUi;
-		this.errorUi = errorUi;
 		
 		this.treatListAsCircular = treatListAsCircular;
 
@@ -37,7 +36,7 @@ class ReorderVideoUi {
 		// if no video selected, error
 		if (index == null) {
 			let message = "Can't relocate a video unless a video is selected.";
-			this.errorUi.displayError(message);
+			EventSystem.publishError(message);
 			return;
 		}
 
@@ -50,7 +49,7 @@ class ReorderVideoUi {
 			}
 		} catch (error) {
 			let message = `Failed to move video, something went wrong.`;
-			this.errorUi.displayError(message);
+			EventSystem.publishError(message);
 			return;
 		}
 	}

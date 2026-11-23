@@ -1,3 +1,4 @@
+import EventSystem from './common/EventSystem.js';
 import ErrorUi from './video-player/ErrorUi.js';
 import YouTubeUi from './video-player/YouTubeUi.js';
 import AddVideoUi from './playlist/AddVideoUi.js';
@@ -35,24 +36,24 @@ class App {
 		this.playlistData = new PlaylistData();
 		this.errorUi = new ErrorUi(ERROR_TEXT_ID, ERROR_BUTTON_ID);
 		this.youtubeUi = new YouTubeUi(VIDEO_DIV_ID, DEFAULT_VIDEO);
-		this.playlistUi = new PlaylistUi(PLAYLIST_ID, this.youtubeUi, this.errorUi);
+		this.playlistUi = new PlaylistUi(PLAYLIST_ID, this.youtubeUi);
 		this.addVideoUi = new AddVideoUi(
 			ADD_VIDEO_TITLE_ID, ADD_VIDEO_URL_ID, ADD_VIDEO_BUTTON_ID,
-			this.playlistData, this.errorUi
+			this.playlistData
 		);
 		this.deleteVideoUi = new DeleteVideoUi(
 			DELETE_BUTTON_ID,
-			this.playlistData, this.playlistUi, this.errorUi
+			this.playlistData, this.playlistUi,
 		);
 		this.reorderVideoUi = new ReorderVideoUi(
 			MOVE_EARLIER_BUTTON_ID, MOVE_LATER_BUTTON_ID,
-			this.playlistData, this.playlistUi, this.errorUi,
+			this.playlistData, this.playlistUi,
 			CIRCULAR_BEHAVIOR_WHEN_MOVING_ITEMS
 		);
-		this.saveUi = new SaveUi(SAVE_BUTTON_ID, this.playlistData, this.errorUi);
-		this.loadUi = new LoadUi(LOAD_BUTTON_ID, this.playlistData, this.errorUi);
-		this.clearAllUi = new ClearUi(CLEAR_BUTTON_ID, this.playlistData, this.errorUi);
-		this.hotkeyUi = new HotkeyUi(this.youtubeUi, this.errorUi);
+		this.saveUi = new SaveUi(SAVE_BUTTON_ID, this.playlistData);
+		this.loadUi = new LoadUi(LOAD_BUTTON_ID, this.playlistData);
+		this.clearAllUi = new ClearUi(CLEAR_BUTTON_ID, this.playlistData);
+		this.hotkeyUi = new HotkeyUi(this.youtubeUi);
 	}
 
 	async initialize() {
@@ -60,7 +61,7 @@ class App {
 		try {
 			var result = await this.playlistData.loadFromWebFile(DEFAULT_PLAYLIST_FILE);
 		} catch (error) {
-			this.errorUi.displayError("Failed to initialize default playlist.");
+			EventSystem.publishError("Failed to initialize default playlist.");
 		}
 	}
 }

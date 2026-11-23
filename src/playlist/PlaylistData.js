@@ -125,8 +125,8 @@ class PlaylistData {
 
 	// Triggers data update stuff
 	_considerMeUpdated() {
-		const event = { videoList: this.getVideoList() };
-		EventSystem.publish("playlist.updated", event);
+		const details = { videoList: this.getVideoList() };
+		EventSystem.publish("playlist.updated", {videoList: this.getVideoList()});
 	}
 
 	// Load a playlist from a pair data file; clears the previous playlist

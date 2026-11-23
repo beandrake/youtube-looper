@@ -10,12 +10,10 @@ import YouTubeOps from './../utils/YouTubeOps.js';
  */
 class PlaylistUi {
 	// @param playlistId - id of element which will contain playlist entries
-	// @param youtubeUi - YouTubeUi to send commands to
-	// @param errorUi - ErrorUi to send errors to	
-	constructor(playlistId, youtubeUi, errorUi) {
+	// @param youtubeUi - YouTubeUi to send commands to	
+	constructor(playlistId, youtubeUi) {
 		this.playlistElement = document.getElementById(playlistId);
 		this.youtubeUi = youtubeUi;
-		this.errorUi = errorUi;
 
 		this.groupName = "video-option";
 
@@ -92,7 +90,7 @@ class PlaylistUi {
 		// record selection so we can select it again, if it still exists
 		const selectionId = this.getSelectedVideoId();
 		
-		const videoList = event.videoList;
+		const videoList = event.details.videoList;
 		
 		// Generates HTML that we will insert within the playlist HTML element
 		let html = '';

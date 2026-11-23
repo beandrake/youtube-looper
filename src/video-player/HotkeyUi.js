@@ -5,10 +5,8 @@ import Listener from './../common/Listener.js';
  */
 class HotkeyUi {
 	// @param youtubeUi - YouTubeUi to inform
-	// @param errorUi - ErrorUi to send errors to.
-	constructor(youtubeUi, errorUi) {
+	constructor(youtubeUi) {
 		this.youtubeUi = youtubeUi
-		this.errorUi = errorUi;
 
 		const callback = (e) => this.hotkeyCheck(e);
 		this.keyListener = new Listener(document, callback, ['keydown']);
