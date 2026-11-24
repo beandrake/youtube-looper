@@ -13,12 +13,9 @@ class AddVideoUi {
 	// @param titleId - id for a text input element.
 	// @param urlId - id for a text input element.
 	// @param buttonId - the id for a button element
-	// @param playlistData - PlaylistData to add new videos to.
-	constructor(titleId, urlId, buttonId, playlistData) {
+	constructor(titleId, urlId, buttonId) {
 		this.titleInput = document.getElementById(titleId);
 		this.urlInput = document.getElementById(urlId);
-		
-		this.playlistData = playlistData;
 
 		const buttonFunction = (event) => this.handleClick(event);
 		this.submitButton = new Listener(buttonId, buttonFunction);
@@ -55,7 +52,13 @@ class AddVideoUi {
 			return;
 		}
 
-		this.playlistData.appendVideo(title, id);
+		EventSystem.publish(
+			"user.command.playlist.add",
+			{
+				title: title,
+				youtubeId: id
+			}
+		);
 		this.clearInputs();
 	}
 

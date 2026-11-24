@@ -4,6 +4,11 @@ import Log from './../utils/Log.js';
  * EventSystem
  * Publish and subscribe to custom events.
  * 
+ * Note that EventSystem is not asynchronous. When an event is "published"
+ * using the publish function, the publish function directly invokes any
+ * callbacks associated with the event, in sequence, before then returning
+ * from publish() to whatever called it.
+ * 
  * Events are objects that contain some metadata about the type of event
  * and the time the event was created; if they were given any other relevant
  * data, that will live nested within the event's details object.

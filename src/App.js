@@ -39,7 +39,6 @@ class App {
 		this.playlistUi = new PlaylistUi(PLAYLIST_ID);
 		this.addVideoUi = new AddVideoUi(
 			ADD_VIDEO_TITLE_ID, ADD_VIDEO_URL_ID, ADD_VIDEO_BUTTON_ID,
-			this.playlistData
 		);
 		this.deleteVideoUi = new DeleteVideoUi(
 			DELETE_BUTTON_ID,
@@ -51,8 +50,8 @@ class App {
 			CIRCULAR_BEHAVIOR_WHEN_MOVING_ITEMS
 		);
 		this.saveUi = new SaveUi(SAVE_BUTTON_ID, this.playlistData);
-		this.loadUi = new LoadUi(LOAD_BUTTON_ID, this.playlistData);
-		this.clearAllUi = new ClearUi(CLEAR_BUTTON_ID, this.playlistData);
+		this.loadUi = new LoadUi(LOAD_BUTTON_ID);
+		this.clearAllUi = new ClearUi(CLEAR_BUTTON_ID);
 		this.hotkeyUi = new HotkeyUi();
 	}
 

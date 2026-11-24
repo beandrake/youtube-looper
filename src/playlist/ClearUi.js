@@ -1,3 +1,4 @@
+import EventSystem from './../common/EventSystem.js';
 import Listener from './../common/Listener.js';
 /**
  * ClearUi
@@ -5,12 +6,15 @@ import Listener from './../common/Listener.js';
  */
 class ClearUi {
 	// @param buttonId - id for a button element.
-	// @playlistData - PlaylistData to add new videos to.
-	constructor(buttonId, playlistData) {				
-		this.playlistData = playlistData;
+	constructor(buttonId) {
 
-		const buttonFunction = () => this.playlistData.clearAll();
+		const buttonFunction = () => this.clearPlaylist();
 		this.button = new Listener(buttonId, buttonFunction);
+	}
+
+	// Sends the command to clear the playlist of entries
+	clearPlaylist() {
+		EventSystem.publish("user.command.playlist.clear");
 	}
 }
 

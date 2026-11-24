@@ -9,6 +9,26 @@ class PlaylistData {
 	constructor() {
 		this.videoList = [];
 		this.nextId = 100;
+
+		this._initialize();
+	}
+
+	_initialize() {
+		EventSystem.subscribe(
+			"user.command.playlist.add",
+			(event) => this.appendVideo(
+				event.details.title,
+				event.details.youtubeId
+			)
+		);
+		EventSystem.subscribe(
+			"user.command.playlist.load",
+			(event) => this.loadFromArray(event.details.videoList)
+		);
+		EventSystem.subscribe(
+			"user.command.playlist.clear",
+			() => this.clearAll()
+		);
 	}
 	
 	// When adding a new item to the list, this generates a distinct id.

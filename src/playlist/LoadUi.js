@@ -9,10 +9,7 @@ import Listener from './../common/Listener.js';
  */
 class LoadUi {
 	// @param buttonId - id for a button that triggers loading
-	// @playlistData - PlaylistData to load video data into.
-	constructor(buttonId, playlistData) {
-		this.playlistData = playlistData;
-		
+	constructor(buttonId) {		
 		// file element, which is not applied to the DOM
 		this.fileElement = document.createElement("input");
 		this.fileElement.type = "file";
@@ -45,7 +42,11 @@ class LoadUi {
 				let videoList = JSON.parse(data);
 				aggregateVideoList = aggregateVideoList.concat(videoList);
 			}
-			this.playlistData.loadFromArray(aggregateVideoList);
+			//this.playlistData.loadFromArray(aggregateVideoList);
+			EventSystem.publish(
+				"user.command.playlist.load",
+				{ videoList: aggregateVideoList }
+			);
 		} catch (error) {
 			EventSystem.publishError("File contains invalid data.");
 			throw error;
