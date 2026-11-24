@@ -5,19 +5,16 @@ const MOVE_EARLIER = true;
 const MOVE_LATER = false;
 /**
  * ReorderVideoUi
- * The interface that shifts video position in the playlist.
+ * The interface that shifts video order in the playlist.
  */
 class ReorderVideoUi {
 	// @param earlierButtonId - id of "move earlier" button element
 	// @param laterButtonId - id of "move later" button element
-	// @param playlistData - PlaylistData to delete from
 	// @param playlistUi - PlaylistUi to retrieve selection from
 	// @param treatListAsCircular - if true, videos moved past start/end loop to the other side
 	constructor(earlierButtonId, laterButtonId,
-				playlistData, playlistUi, treatListAsCircular=true) {
-		this.playlistData = playlistData;
-		this.playlistUi = playlistUi;
-		
+				playlistUi, treatListAsCircular=true) {
+		this.playlistUi = playlistUi;		
 		this.treatListAsCircular = treatListAsCircular;
 
 		const moveEarlierFunction = () => this.shiftVideo(MOVE_EARLIER);
@@ -42,11 +39,10 @@ class ReorderVideoUi {
 
 		// tell PlaylistData to shift video one spot in the desired direction
 		try {
-			if (moveTowardsFront) {
-				this.playlistData.shiftVideoEarlier(id, this.treatListAsCircular);
-			} else {
-				this.playlistData.shiftVideoLater(id, this.treatListAsCircular);
-			}
+			var eventType = "user.command.playlist.move.";
+			eventType += moveTowardsFront ? "earlier" : "later";
+			const details = { id: id,  circular: this.treatListAsCircular};
+			EventSystem.publish(eventType, details);
 		} catch (error) {
 			let message = `Failed to move video, something went wrong.`;
 			EventSystem.publishError(message);

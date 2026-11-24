@@ -6,10 +6,8 @@ import Listener from './../common/Listener.js';
  */
 class DeleteVideoUi {
 	// @param buttonId - the id for a button element
-	// @param playlistData - PlaylistData to delete from
 	// @param playlistUi - PlaylistUi to retrieve selection from
-	constructor(buttonId, playlistData, playlistUi) {		
-		this.playlistData = playlistData;
+	constructor(buttonId, playlistUi) {		
 		this.playlistUi = playlistUi;
 
 		const buttonFunction = () => this.deleteVideo();
@@ -30,7 +28,11 @@ class DeleteVideoUi {
 
 		// delete video from Playlist data.
 		try {
-			this.playlistData.removeVideo(id);
+			//this.playlistData.removeVideo(id);
+			EventSystem.publish(
+				"user.command.playlist.delete",
+				{ id: id }
+			);
 		} catch (error) {
 			let message = `Failed to delete video, something went wrong.`;
 			EventSystem.publishError(message);

@@ -41,13 +41,11 @@ class App {
 			ADD_VIDEO_TITLE_ID, ADD_VIDEO_URL_ID, ADD_VIDEO_BUTTON_ID,
 		);
 		this.deleteVideoUi = new DeleteVideoUi(
-			DELETE_BUTTON_ID,
-			this.playlistData, this.playlistUi,
+			DELETE_BUTTON_ID, this.playlistUi
 		);
 		this.reorderVideoUi = new ReorderVideoUi(
 			MOVE_EARLIER_BUTTON_ID, MOVE_LATER_BUTTON_ID,
-			this.playlistData, this.playlistUi,
-			CIRCULAR_BEHAVIOR_WHEN_MOVING_ITEMS
+			this.playlistUi, CIRCULAR_BEHAVIOR_WHEN_MOVING_ITEMS
 		);
 		this.saveUi = new SaveUi(SAVE_BUTTON_ID, this.playlistData);
 		this.loadUi = new LoadUi(LOAD_BUTTON_ID);

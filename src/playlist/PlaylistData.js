@@ -14,12 +14,31 @@ class PlaylistData {
 	}
 
 	_initialize() {
+		// subscribe to events that modify playlist
 		EventSystem.subscribe(
 			"user.command.playlist.add",
 			(event) => this.appendVideo(
 				event.details.title,
 				event.details.youtubeId
 			)
+		);
+		EventSystem.subscribe(
+			"user.command.playlist.move.earlier",
+			(event) => this.shiftVideoEarlier(
+				event.details.id,
+				event.details.circular
+			)
+		);
+		EventSystem.subscribe(
+			"user.command.playlist.move.later",
+			(event) => this.shiftVideoLater(
+				event.details.id,
+				event.details.circular
+			)
+		);
+		EventSystem.subscribe(
+			"user.command.playlist.delete",
+			(event) => this.removeVideo(event.details.id)
 		);
 		EventSystem.subscribe(
 			"user.command.playlist.load",
