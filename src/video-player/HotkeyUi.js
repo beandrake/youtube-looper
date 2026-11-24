@@ -1,13 +1,11 @@
+import EventSystem from './../common/EventSystem.js';
 import Listener from './../common/Listener.js';
 /**
  * HotkeyUi
  * Detects key presses and acts on them.
  */
 class HotkeyUi {
-	// @param youtubeUi - YouTubeUi to inform
-	constructor(youtubeUi) {
-		this.youtubeUi = youtubeUi
-
+	constructor() {
 		const callback = (e) => this.hotkeyCheck(e);
 		this.keyListener = new Listener(document, callback, ['keydown']);
 	}
@@ -27,7 +25,10 @@ class HotkeyUi {
 
 		// K = toggle between Play and Pause.
 		if ( `${e.key}`.toLowerCase() == "k" ) {
-			this.youtubeUi.togglePlayAndPause();
+			//this.youtubeUi.togglePlayAndPause();
+			EventSystem.publish(
+				"user.command.player.playback.toggle"
+			);
 		}
 	}
 

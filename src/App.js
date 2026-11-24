@@ -36,7 +36,7 @@ class App {
 		this.playlistData = new PlaylistData();
 		this.errorUi = new ErrorUi(ERROR_TEXT_ID, ERROR_BUTTON_ID);
 		this.youtubeUi = new YouTubeUi(VIDEO_DIV_ID, DEFAULT_VIDEO);
-		this.playlistUi = new PlaylistUi(PLAYLIST_ID, this.youtubeUi);
+		this.playlistUi = new PlaylistUi(PLAYLIST_ID);
 		this.addVideoUi = new AddVideoUi(
 			ADD_VIDEO_TITLE_ID, ADD_VIDEO_URL_ID, ADD_VIDEO_BUTTON_ID,
 			this.playlistData
@@ -53,7 +53,7 @@ class App {
 		this.saveUi = new SaveUi(SAVE_BUTTON_ID, this.playlistData);
 		this.loadUi = new LoadUi(LOAD_BUTTON_ID, this.playlistData);
 		this.clearAllUi = new ClearUi(CLEAR_BUTTON_ID, this.playlistData);
-		this.hotkeyUi = new HotkeyUi(this.youtubeUi);
+		this.hotkeyUi = new HotkeyUi();
 	}
 
 	async initialize() {

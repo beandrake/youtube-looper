@@ -10,10 +10,8 @@ import YouTubeOps from './../utils/YouTubeOps.js';
  */
 class PlaylistUi {
 	// @param playlistId - id of element which will contain playlist entries
-	// @param youtubeUi - YouTubeUi to send commands to	
-	constructor(playlistId, youtubeUi) {
+	constructor(playlistId) {
 		this.playlistElement = document.getElementById(playlistId);
-		this.youtubeUi = youtubeUi;
 
 		this.groupName = "video-option";
 
@@ -43,7 +41,11 @@ class PlaylistUi {
 		);
 
 		//this.videoFrame.src = cleanedUrl;
-		this.youtubeUi.loadAndPlayVideo(youtubeId);
+		//this.youtubeUi.loadAndPlayVideo(youtubeId);
+		EventSystem.publish(
+			"user.command.player.launch",
+			{ youtubeId: youtubeId }
+		);
 	}
 
 	// Returns index of video that is currently selected, or null if none

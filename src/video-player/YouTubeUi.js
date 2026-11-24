@@ -1,5 +1,6 @@
 // There are notes on the YouTube IFrame API at the bottom of this file.
 import YouTubeIframeApiLoader from './../common/YouTubeIframeApiLoader.js';
+import EventSystem from './../common/EventSystem.js';
 import Log from './../utils/Log.js';
 
 /**
@@ -52,6 +53,16 @@ class YouTubeUi {
 	// Called when the player is ready to use immediately after creation.
 	_onPlayerReady(event) {
 		//Log.toConsole("YT.Player object ready.");
+		
+		// Subscribe to events that affect the player.
+		EventSystem.subscribe(
+			"user.command.player.launch",
+			(event) => this.loadAndPlayVideo(event.details.youtubeId)
+		);
+		EventSystem.subscribe(
+			"user.command.player.playback.toggle",
+			() => this.togglePlayAndPause()
+		);
 	}
 
 	
