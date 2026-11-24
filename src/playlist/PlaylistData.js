@@ -62,28 +62,42 @@ class PlaylistData {
 	}
 
 	// Remove a video from the list and consider data updated.
-	removeVideo(index) {
-		this._removeVideo(index);
+	removeVideo(id) {
+		this._removeVideo(id);
 		this._considerMeUpdated();
 	}
 
 	// Remove a video from the list.
-	_removeVideo(index) {
+	_removeVideo(id) {
+		let index = this._getIndexFromId(id);
 		this._validateIndex(index);
 		this.videoList.splice(index, 1);
 	}
 
+	// Find index associated with id
+	_getIndexFromId(id) {
+		for (let index=0; index < this.videoList.length; index++) {
+			if (this.videoList[index].id == id) {
+				return index;
+			}
+		}
+		return -1;
+	}
+
 	// Update a video's title and consider data updated.
-	updateTitle(index, title) {
+	updateTitle(id, title) {
+		let index = this._getIndexFromId(id);
+		this._validateIndex(index);
 		this.videoList[index].title = title;
 		this._considerMeUpdated();
 	}
 
 	// Shift video 1 index earlier and consider data updated.
-	// @param index - index of video to move
+	// @param id - id of video to move
 	// @param underflow - if video is at the start of list, false will not move
 	//                     the video, while true will move it to the end.
-	shiftVideoEarlier(index, underflow=true) {
+	shiftVideoEarlier(id, underflow=true) {
+		let index = this._getIndexFromId(id);
 		this._validateIndex(index);
 
 		if (index > 0) {
@@ -94,17 +108,18 @@ class PlaylistData {
 		} else if (underflow) {
 			// put at the end of the list
 			let targetVideo = this.videoList[index];
-			this._removeVideo(index);
+			this._removeVideo(id);
 			this.videoList.push(targetVideo);
 		}
 		this._considerMeUpdated();
 	}
 
 	// Shift video 1 index later and consider data updated.
-	// @param index - index of video to move
+	// @param id - id of video to move
 	// @param overflow - if video is at the end of list, false will not move
 	//                   the video, while true will move it to the start.
-	shiftVideoLater(index, overflow=true) {
+	shiftVideoLater(id, overflow=true) {
+		let index = this._getIndexFromId(id);
 		this._validateIndex(index);
 
 		if (index < this.videoList.length-1) {
@@ -115,7 +130,7 @@ class PlaylistData {
 		} else if (overflow) {
 			// put at the start of the list
 			let targetVideo = this.videoList[index];
-			this._removeVideo(index);
+			this._removeVideo(id);
 			this.videoList.unshift(targetVideo);
 		}
 		this._considerMeUpdated();

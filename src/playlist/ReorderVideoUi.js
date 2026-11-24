@@ -31,10 +31,10 @@ class ReorderVideoUi {
 	// @param moveTowardsFront - if true shifts earlier, otherwise shifts later
 	shiftVideo(moveTowardsFront) {
 		// get selected video from Playlist UI.
-		const index = this.playlistUi.getSelectedVideoIndex();
+		const id = this.playlistUi.getSelectedVideoId();
 
 		// if no video selected, error
-		if (index == null) {
+		if (id == null) {
 			let message = "Can't relocate a video unless a video is selected.";
 			EventSystem.publishError(message);
 			return;
@@ -43,9 +43,9 @@ class ReorderVideoUi {
 		// tell PlaylistData to shift video one spot in the desired direction
 		try {
 			if (moveTowardsFront) {
-				this.playlistData.shiftVideoEarlier(index, this.treatListAsCircular);
+				this.playlistData.shiftVideoEarlier(id, this.treatListAsCircular);
 			} else {
-				this.playlistData.shiftVideoLater(index, this.treatListAsCircular);
+				this.playlistData.shiftVideoLater(id, this.treatListAsCircular);
 			}
 		} catch (error) {
 			let message = `Failed to move video, something went wrong.`;

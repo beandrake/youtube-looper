@@ -19,10 +19,10 @@ class DeleteVideoUi {
 	// delete the selected entry in the video list
 	deleteVideo() {
 		// get selected video from Playlist UI.
-		let index = this.playlistUi.getSelectedVideoIndex();
+		let id = this.playlistUi.getSelectedVideoId();
 
 		// if no video selected, error
-		if (index == null) {
+		if (id == null) {
 			let message = "Can't delete a video unless a video is selected.";
 			EventSystem.publishError(message);
 			return;
@@ -30,7 +30,7 @@ class DeleteVideoUi {
 
 		// delete video from Playlist data.
 		try {
-			this.playlistData.removeVideo(index);
+			this.playlistData.removeVideo(id);
 		} catch (error) {
 			let message = `Failed to delete video, something went wrong.`;
 			EventSystem.publishError(message);
