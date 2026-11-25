@@ -18,9 +18,25 @@ class YouTubeUi {
 		this.width = "560"
 		this.height = "315"
 
-		//console.log(`constructor: ${this.iframeOrDivId}`);
+		// When YouTube Iframe API is ready, initialize the player.
 		const myCallback = () => this.initialize();
 		YouTubeIframeApiLoader.callMyCallbackWhenApiIsReady(myCallback);
+
+		// Until the player is initialized, if a playlist gets loaded,
+		// change default video to playlist's first video. 
+		this.updateDefaultVideo = (event) => this._updateDefaultVideo(event);
+		EventSystem.subscribe("playlist.updated", this.updateDefaultVideo);
+	}
+
+
+	_updateDefaultVideo(event) {
+		const videoList = event.details.videoList;
+		if (videoList.length < 1) {
+			return;
+		} else {
+			const youtubeId = videoList[0].youtubeId;
+			this.default_youtubeId = youtubeId;
+		}
 	}
 
 
@@ -44,9 +60,11 @@ class YouTubeUi {
 			}
 		};
 
+		// We've used the default video, no point in further updates.
+		EventSystem.unsubscribe("playlist.updated", this.updateDefaultVideo);
+
 		// After making YT.Player, leave it alone until onReady event!
-		//console.log(`initialize: ${this.iframeOrDivId}`);
-		this.player = new YT.Player(this.iframeOrDivId, settings);		
+		this.player = new YT.Player(this.iframeOrDivId, settings);
 	}
 
 	

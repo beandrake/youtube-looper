@@ -121,6 +121,15 @@ class PlaylistUi {
 		
 		// apply what we created to the page
 		this.playlistElement.innerHTML = cleanHtml;
+
+		// if radio buttons exist and one isn't selected, select the first one
+		if (this.getSelectedVideoId() == null && index > 0) {
+			const firstId = this._generateElementId(0, videoList[0].id);
+			const firstRadioButton = document.getElementById(firstId);
+			firstRadioButton.checked = true;
+			// load the newly selected video into the player
+			this.loadVideo(firstRadioButton.value);
+		}
 	}
 }
 
